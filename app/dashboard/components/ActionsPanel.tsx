@@ -4,12 +4,12 @@ import { useAccount, useBalance, useContractRead, useContractWrite, useSimulateC
 import { MEGA_ABI, MEGA_CONTRACT_ADDRESS } from '@/contracts/mega';
 import LoadingSpinner from '@/components/common/LoadingSpinner';
 import DashboardCard from '@/components/common/DashboardCard';
-import { parseUnits, formatUnits, parseEther } from 'ethers';
+import { parseUnits, formatUnits, parseEther } from 'viem';
 
 const SLIPPAGE_OPTIONS = [2, 5, 10];
 
 // Type assertion for contract address to satisfy wagmi
-const CONTRACT_ADDRESS = MEGA_CONTRACT_ADDRESS! as `0x${string}`;
+const CONTRACT_ADDRESS = MEGA_CONTRACT_ADDRESS as `0x${string}`;
 
 // Utility to convert scientific notation to plain string
 function toPlainString(num: string | number) {
@@ -30,7 +30,7 @@ export default function ActionsPanel() {
     address: CONTRACT_ADDRESS,
     abi: MEGA_ABI,
     functionName: 'balanceOf',
-    args: [address! as `0x${string}`],
+    args: address ? [address as `0x${string}`] : undefined,
     account: address,
     query: { refetchInterval: 5000, enabled: !!address },
   });
@@ -72,7 +72,7 @@ export default function ActionsPanel() {
     address: CONTRACT_ADDRESS,
     abi: MEGA_ABI,
     functionName: 'lastFreeze',
-    args: [address! as `0x${string}`],
+    args: address ? [address as `0x${string}`] : undefined,
     query: { refetchInterval: 5000, enabled: !!address },
   });
 
