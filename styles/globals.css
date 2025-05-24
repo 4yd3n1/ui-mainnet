@@ -1,0 +1,118 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'Press Start 2P';
+  src: url('/fonts/PressStart2P/PressStart2P-Regular.ttf') format('truetype');
+  font-weight: normal;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Neon Noir Utility Classes - Mobile Optimized */
+.neon-text-cyan {
+  color: #00fff7;
+  /* Reduced glow for mobile */
+  text-shadow: 0 0 2px #00fff7, 0 0 4px #00fff7;
+}
+
+.neon-text-pink {
+  color: #ff00de;
+  /* Reduced glow for mobile */
+  text-shadow: 0 0 2px #ff00de, 0 0 4px #ff00de;
+}
+
+.neon-border-cyan {
+  border-color: #00fff7 !important;
+  /* Reduced glow for mobile */
+  box-shadow: 0 0 2px #00fff7, 0 0 4px #00fff7;
+}
+
+.neon-text-yellow {
+  color: #ffe066;
+  /* Reduced glow for mobile */
+  text-shadow: 0 0 1px #ffe066, 0 0 2px #ffe066, 0 0 4px #ffe066;
+}
+
+.neon-text-orange {
+  color: #FFA500;
+  /* Reduced glow for mobile */
+  text-shadow: 0 0 2px #FFA500, 0 0 4px #FFA500;
+}
+
+/* Enhanced glow effects for desktop/tablet (md and up) */
+@media (min-width: 768px) {
+  .neon-text-cyan {
+    text-shadow: 0 0 4px #00fff7, 0 0 8px #00fff7, 0 0 16px #00fff7;
+  }
+  
+  .neon-text-pink {
+    text-shadow: 0 0 4px #ff00de, 0 0 8px #ff00de, 0 0 16px #ff00de;
+  }
+  
+  .neon-border-cyan {
+    box-shadow: 0 0 4px #00fff7, 0 0 8px #00fff7;
+  }
+  
+  .neon-text-yellow {
+    text-shadow: 0 0 2px #ffe066, 0 0 4px #ffe066, 0 0 8px #ffe066;
+  }
+  
+  .neon-text-orange {
+    text-shadow: 0 0 4px #FFA500, 0 0 8px #FFA500, 0 0 16px #FFA500;
+  }
+}
+
+/* Even more intense glow for large screens */
+@media (min-width: 1024px) {
+  .neon-text-cyan {
+    text-shadow: 0 0 8px #00fff7, 0 0 16px #00fff7, 0 0 32px #00fff7;
+  }
+  
+  .neon-text-pink {
+    text-shadow: 0 0 8px #ff00de, 0 0 16px #ff00de, 0 0 32px #ff00de;
+  }
+  
+  .neon-border-cyan {
+    box-shadow: 0 0 8px #00fff7, 0 0 16px #00fff7;
+  }
+  
+  .neon-text-yellow {
+    text-shadow: 0 0 4px #ffe066, 0 0 8px #ffe066, 0 0 16px #ffe066;
+  }
+  
+  .neon-text-orange {
+    text-shadow: 0 0 8px #FFA500, 0 0 16px #FFA500, 0 0 32px #FFA500;
+  }
+}
+
+.neon-bg {
+  background: linear-gradient(135deg, #10182A 60%, #1a1a40 100%);
+}
+
+body {
+  background: linear-gradient(135deg, #10182A 60%, #1a1a40 100%);
+  min-height: 100vh;
+}
+
+.font-press {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.75rem;
+}
+
+.font-press::placeholder,
+.font-press input::placeholder,
+.font-press textarea::placeholder,
+input.font-press::placeholder,
+textarea.font-press::placeholder {
+  font-family: 'Press Start 2P', cursive;
+  font-size: 0.75rem;
+}
+
+.landing-bg {
+  min-height: 100vh;
+  width: 100vw;
+  background: url('/ethbackground.png') center center / cover no-repeat fixed;
+  background-color: #10182A;
+}
