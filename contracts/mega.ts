@@ -1,0 +1,4 @@
+import MEGA_ABI from './MEGA_ABI.json';
+
+export { MEGA_ABI };
+export const MEGA_CONTRACT_ADDRESS = '0xE296e8168d34d8F9f5d52584F1C65b099f353640';
