@@ -5,6 +5,7 @@ import { MEGA_ABI, MEGA_CONTRACT_ADDRESS } from '@/contracts/mega';
 import LoadingSpinner from '@/components/common/LoadingSpinner';
 import DashboardCard from '@/components/common/DashboardCard';
 import { parseUnits, formatUnits, parseEther } from 'viem';
+import Link from 'next/link';
 
 const SLIPPAGE_OPTIONS = [2, 5, 10];
 
