@@ -53,7 +53,7 @@ export default function RulesModal({ isOpen, onClose }: RulesModalProps) {
             <section className="bg-[#1a2333] rounded-lg p-6">
               <h3 className="text-xl font-bold text-yellow-400 mb-4 text-center">📜 Game Rules</h3>
               <div className="space-y-3 text-gray-300">
-                <p><strong>Duration:</strong> 7 days OR until the market cap hits $1 million USD — whichever comes first</p>
+                <p><strong>Duration:</strong> 7 days OR until the market cap hits $10 million USD — whichever comes first</p>
                 <p><strong>Trading:</strong> MEGA tokens are bought and sold AMM-style (automated market maker) exclusively on megaa.dev — no exchanges, no listings, no bullshit</p>
                 <p><strong>Buy Limit:</strong> Maximum 1 ETH per wallet</p>
                 <div>
@@ -128,7 +128,7 @@ export default function RulesModal({ isOpen, onClose }: RulesModalProps) {
             <section className="bg-red-900/20 border border-red-500/30 rounded-lg p-6">
               <h3 className="text-xl font-bold text-red-400 mb-4 text-center">❌ Game Failure Condition</h3>
               <p className="text-gray-300 mb-2">
-                If the 7-day timer expires and the $1M market cap is not reached…
+                If the 7-day timer expires and the $10M market cap is not reached…
               </p>
               <p className="text-red-400 font-bold text-lg">
                 💥 Everyone loses. No refunds. No prizes.

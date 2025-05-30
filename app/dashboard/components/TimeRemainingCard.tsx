@@ -71,6 +71,14 @@ export default function TimeRemainingCard() {
     query: { refetchInterval: 5000 },
   }) as { data: boolean | undefined, refetch: () => void };
 
+  // Add contract read for failed state
+  const { data: gameFailed } = useContractRead({
+    address: MEGA_CONTRACT_ADDRESS,
+    abi: MEGA_ABI,
+    functionName: 'failed',
+    query: { refetchInterval: 5000 },
+  });
+
   // Common refetch function to update all flags
   const refetchAll = async () => {
     await Promise.all([
@@ -106,18 +114,13 @@ export default function TimeRemainingCard() {
   }, [timeLeft, gameEnded]);
 
   useEffect(() => {
-    const isValidCap = (val: any) => (typeof val === 'string' || typeof val === 'number' || typeof val === 'bigint') && val !== null;
-    if (
-      gameEnded &&
-      isValidCap(marketCap) &&
-      isValidCap(marketCapLimit) &&
-      BigInt(marketCap as string) < BigInt(marketCapLimit as string)
-    ) {
+    // Only show failure popup if game actually failed (not just because market cap wasn't reached)
+    if (gameEnded && gameFailed === true) {
       setShowFailurePopup(true);
     } else {
       setShowFailurePopup(false);
     }
-  }, [gameEnded, marketCap, marketCapLimit]);
+  }, [gameEnded, gameFailed]);
 
   // Timer display calculations
   const days = timeLeft !== undefined ? Math.floor(timeLeft / 86400) : '--';
@@ -667,7 +670,7 @@ export default function TimeRemainingCard() {
         {!gameEnded && (
           <h3 className="text-4xl font-bold mb-4 neon-text-yellow font-press">Time Remaining</h3>
         )}
-        {error && <p className="text-red-500">Error: {error}</p>}
+        {error && <p className="text-red-500">{error.includes("User rejected") || error.includes("User denied") || error.includes("rejected") || error.includes("denied") ? "Transaction cancelled by user" : error.includes("insufficient funds") ? "Insufficient funds for transaction" : error.includes("gas") && error.includes("estimate") ? "Unable to estimate gas. Please try again." : error}</p>}
         {successMsg && <p className="text-green-500">{successMsg}</p>}
         {gameEnded && (!earlyBirdsDistributed || (earlyBirdsDistributed && isOwner && !ownerPaid)) ? (
           <div className="flex flex-col items-center gap-4 mt-6 w-full max-w-md">

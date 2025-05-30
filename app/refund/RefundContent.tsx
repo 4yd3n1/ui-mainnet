@@ -1,6 +1,7 @@
 'use client';
 import { useState, useEffect } from 'react';
 import { useAccount, useContractRead, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 import { MEGA_ABI, MEGA_CONTRACT_ADDRESS } from '@/contracts/mega';
 import { formatEther, parseEther } from 'viem';
 import Link from 'next/link';
@@ -205,7 +206,17 @@ export default function RefundContent() {
         <div className="text-center">
           <h1 className="text-4xl font-bold mb-4">Emergency Refunds</h1>
           <p className="text-lg mb-8">Please connect your wallet to access the refund system.</p>
-          <Link href="/dashboard" className="bg-gold text-bg-main px-6 py-3 rounded-lg font-bold hover:bg-yellow-400 transition-colors">
+          
+          {/* Wallet Connect Button */}
+          <div className="mb-6 flex justify-center">
+            <ConnectButton 
+              showBalance={false} 
+              accountStatus="address" 
+              chainStatus="icon"
+            />
+          </div>
+          
+          <Link href="/dashboard" className="bg-yellow-500 text-black px-6 py-3 rounded-lg font-bold hover:bg-yellow-400 transition-colors">
             Go to Dashboard
           </Link>
         </div>
@@ -227,7 +238,7 @@ export default function RefundContent() {
         <div className="text-center">
           <h1 className="text-4xl font-bold mb-4">Error</h1>
           <p className="text-lg mb-8">Unable to load refund information.</p>
-          <Link href="/dashboard" className="bg-gold text-bg-main px-6 py-3 rounded-lg font-bold hover:bg-yellow-400 transition-colors">
+          <Link href="/dashboard" className="bg-yellow-500 text-black px-6 py-3 rounded-lg font-bold hover:bg-yellow-400 transition-colors">
             Go to Dashboard
           </Link>
         </div>
@@ -280,7 +291,7 @@ export default function RefundContent() {
             <p className="text-gray-300 mb-4">
               The emergency refund system is only available after the game ends and a 30-minute delay period.
             </p>
-            <Link href="/dashboard" className="bg-gold text-bg-main px-6 py-3 rounded-lg font-bold hover:bg-yellow-400 transition-colors">
+            <Link href="/dashboard" className="bg-yellow-500 text-black px-6 py-3 rounded-lg font-bold hover:bg-yellow-400 transition-colors">
               Continue Playing
             </Link>
           </div>

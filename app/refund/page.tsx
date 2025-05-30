@@ -1,7 +1,5 @@
 'use client';
-import { useState, useEffect } from 'react';
 import dynamic from 'next/dynamic';
-import TermsModal from '@/components/TermsModal';
 
 const RefundContent = dynamic(
   () => import('./RefundContent'),
@@ -16,22 +14,9 @@ const RefundContent = dynamic(
 );
 
 export default function RefundPage() {
-  const [accepted, setAccepted] = useState(false);
-
-  useEffect(() => {
-    // check localStorage flag
-    setAccepted(localStorage.getItem('termsAccepted') === 'true');
-  }, []);
-
-  const handleAccept = () => {
-    localStorage.setItem('termsAccepted', 'true');
-    setAccepted(true);
-  };
-
   return (
     <>
-      {!accepted && <TermsModal onAccept={handleAccept} />}
-      {accepted && <RefundContent />}
+      <RefundContent />
     </>
   );
 } 

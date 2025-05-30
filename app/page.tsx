@@ -1,29 +1,13 @@
 'use client';
-import { useEffect, useState } from 'react';
-import TermsModal from '@/components/TermsModal';
+import { useState } from 'react';
 import RulesModal from '@/components/RulesModal';
 
 export default function HomePage() {
-  const [accepted, setAccepted] = useState(false);
   const [rulesOpen, setRulesOpen] = useState(false);
-
-  useEffect(() => {
-    const termsAccepted = localStorage.getItem('termsAccepted') === 'true';
-    setAccepted(termsAccepted);
-  }, []);
-
-  const handleAccept = () => {
-    localStorage.setItem('termsAccepted', 'true');
-    setAccepted(true);
-  };
-
-  if (!accepted) {
-    return <div className="landing-bg"><TermsModal onAccept={handleAccept} /></div>;
-  }
 
   return (
     <div className="landing-bg">
-      <main 
+      <main
         className="min-h-screen flex flex-col items-center justify-center text-white px-4"
         style={{
           backgroundImage: "url('/ethbackground.png')",
@@ -32,7 +16,7 @@ export default function HomePage() {
           backgroundRepeat: 'no-repeat',
         }}
       >
-        <div 
+        <div
           className="min-h-screen flex flex-col items-center justify-center w-full"
           style={{ background: 'rgba(0,0,0,0.7)' }}
         >
@@ -47,7 +31,7 @@ export default function HomePage() {
             <p className="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto">
               The ultimate high-stakes crypto lottery race
             </p>
-            
+
             <p className="text-lg text-gray-400 mb-12 max-w-2xl mx-auto">
               Enter the race where every ETH spent buying MEGA tokens earns lottery tickets for life-changing prizes. The clock is ticking!
             </p>
@@ -60,7 +44,7 @@ export default function HomePage() {
               >
                 Rules and Disclaimer
               </button>
-              
+
               <p className="text-sm text-gray-500">
                 Click above to read the complete game rules and risk disclaimers
               </p>
@@ -81,9 +65,9 @@ export default function HomePage() {
       </main>
 
       {/* Rules Modal */}
-      <RulesModal 
-        isOpen={rulesOpen} 
-        onClose={() => setRulesOpen(false)} 
+      <RulesModal
+        isOpen={rulesOpen}
+        onClose={() => setRulesOpen(false)}
       />
     </div>
   );

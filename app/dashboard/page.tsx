@@ -1,8 +1,8 @@
 'use client';
-import { useState, useEffect } from 'react';
+import React from 'react';
 import dynamic from 'next/dynamic';
-import TermsModal from '@/components/TermsModal';
 import WinnerPopupClient from '../components/WinnerPopupClient';
+import { useSepoliaRedirect } from '@/components/common/NetworkCheck';
 
 const DashboardContent = dynamic(
   () => import('./DashboardContent'),
@@ -17,23 +17,21 @@ const DashboardContent = dynamic(
 );
 
 export default function DashboardPage() {
-  const [accepted, setAccepted] = useState(false);
+  const isOnSepolia = useSepoliaRedirect();
 
-  useEffect(() => {
-    // check localStorage flag
-    setAccepted(localStorage.getItem('termsAccepted') === 'true');
-  }, []);
-
-  const handleAccept = () => {
-    localStorage.setItem('termsAccepted', 'true');
-    setAccepted(true);
-  };
+  // Show loading while checking network or redirecting
+  if (!isOnSepolia) {
+    return (
+      <main className="min-h-screen flex items-center justify-center bg-bg-main text-white">
+        <p>Checking network...</p>
+      </main>
+    );
+  }
 
   return (
     <>
-      {!accepted && <TermsModal onAccept={handleAccept} />}
-      {accepted && <DashboardContent />}
+      <DashboardContent />
       <WinnerPopupClient />
     </>
   );
-} 
+}
