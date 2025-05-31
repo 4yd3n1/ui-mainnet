@@ -364,7 +364,7 @@ export default function ActionsPanel() {
   if (isLoading) {
     return (
       <DashboardCard>
-        <div className="flex items-center justify-center py-8">
+        <div className="flex items-center justify-center py-4 md:py-8">
           <LoadingSpinner />
         </div>
       </DashboardCard>
@@ -373,8 +373,8 @@ export default function ActionsPanel() {
 
   return (
     <DashboardCard>
-      <div className="space-y-3">
-        <div className={`bg-bg-card-alt rounded-lg p-4 flex flex-col gap-4 ${gameEnded ? 'opacity-50' : ''}`}>
+      <div className="space-y-3 md:space-y-4 flex-1">
+        <div className={`bg-bg-card-alt rounded-lg p-4 md:p-4 flex flex-col gap-3 md:gap-4 ${gameEnded ? 'opacity-50' : ''}`}>
           <div className="flex items-center justify-between">
             <input
               type="text"
@@ -386,17 +386,17 @@ export default function ActionsPanel() {
               onChange={e => !gameEnded && (tab === 'buy' ? handleEthInput(e.target.value) : handleMegaInput(e.target.value))}
               placeholder="0.0"
               disabled={gameEnded}
-              className="bg-transparent outline-none w-1/2 disabled:cursor-not-allowed"
+              className="bg-transparent outline-none w-1/2 disabled:cursor-not-allowed text-base md:text-lg"
             />
             <div className="flex flex-col items-end">
               <button 
-                className="text-xs neon-text-yellow hover:underline disabled:opacity-50 disabled:cursor-not-allowed" 
+                className="text-xs md:text-sm neon-text-yellow hover:underline disabled:opacity-50 disabled:cursor-not-allowed" 
                 onClick={!gameEnded ? (tab === 'buy' ? handleMaxEth : handleMaxMega) : undefined}
                 disabled={gameEnded}
               >
                 Max
               </button>
-              <span className="text-sm text-gray-400">{tab === 'buy' ? 'ETH to spend' : 'MEGA to sell'}</span>
+              <span className="text-sm md:text-sm text-gray-400 text-right">{tab === 'buy' ? 'ETH to spend' : 'MEGA to sell'}</span>
             </div>
           </div>
           {/* Discrete Snap Slider for Buy/Sell Percentage */}
@@ -419,7 +419,7 @@ export default function ActionsPanel() {
                   }
                 }}
                 disabled={gameEnded}
-                className="px-2 py-1 text-xs bg-bg-secondary hover:bg-bg-hover text-neon-green disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-2 md:px-3 py-1 text-xs md:text-sm bg-bg-secondary hover:bg-bg-hover text-neon-green disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 {percent}%
               </button>
@@ -428,7 +428,7 @@ export default function ActionsPanel() {
           <div className="flex items-center justify-center my-2">
             <span
               className={`arrow-anim ${tab === 'buy' ? 'arrow-buy' : 'arrow-sell'} bg-[#232B45] rounded-full p-2 neon-text-yellow cursor-pointer hover:bg-yellow-300/30 transition ${gameEnded ? 'opacity-50 cursor-not-allowed' : ''}`}
-              style={{ fontSize: '1.5rem' }}
+              style={{ fontSize: '1.2rem' }}
               onClick={() => !gameEnded && setTab(tab === 'buy' ? 'sell' : 'buy')}
               title={`Switch to ${tab === 'buy' ? 'Sell' : 'Buy'} mode`}
               role="button"
@@ -449,18 +449,18 @@ export default function ActionsPanel() {
               onChange={e => !gameEnded && (tab === 'buy' ? handleMegaInput(e.target.value) : handleEthInput(e.target.value))}
               placeholder="0.0"
               disabled={gameEnded}
-              className="bg-transparent outline-none w-1/2 disabled:cursor-not-allowed"
+              className="bg-transparent outline-none w-1/2 disabled:cursor-not-allowed text-base md:text-lg"
             />
             <div className="flex flex-col items-end">
-              <span className="text-sm text-gray-400">{tab === 'buy' ? 'MEGA to receive' : 'ETH to receive'}</span>
+              <span className="text-sm md:text-sm text-gray-400 text-right">{tab === 'buy' ? 'MEGA to receive' : 'ETH to receive'}</span>
             </div>
           </div>
-          <div className="flex flex-wrap items-center justify-center gap-2 mt-2 w-full">
+          <div className="flex flex-wrap items-center justify-center gap-2 md:gap-2 mt-2 w-full">
             {SLIPPAGE_OPTIONS.map(opt => (
               <button
                 key={opt}
                 disabled={gameEnded}
-                className={`px-3 py-1 rounded-full border ${!gameEnded && slippage === opt ? 'bg-yellow-400 text-white border-yellow-400' : 'bg-[#181E33] text-gray-300 border-[#232B45] disabled:opacity-50 disabled:cursor-not-allowed'}`}
+                className={`px-2 md:px-3 py-1 rounded-full border text-xs md:text-sm ${!gameEnded && slippage === opt ? 'bg-yellow-400 text-white border-yellow-400' : 'bg-[#181E33] text-gray-300 border-[#232B45] disabled:opacity-50 disabled:cursor-not-allowed'}`}
                 onClick={() => { if (!gameEnded) { setSlippage(opt); setCustomSlippage(''); }}}
               >{opt}%</button>
             ))}
@@ -470,7 +470,7 @@ export default function ActionsPanel() {
               step={0.1}
               placeholder="Custom"
               disabled={gameEnded}
-              className={`w-20 px-2 py-1 rounded-full border ${!gameEnded && slippage === Number(customSlippage) && slippage > 0 ? 'bg-yellow-400 text-white border-yellow-400' : 'bg-[#181E33] text-gray-300 border-[#232B45] disabled:opacity-50 disabled:cursor-not-allowed'}`}
+              className={`w-20 md:w-24 px-2 md:px-2 py-1 rounded-full border text-xs md:text-sm ${!gameEnded && slippage === Number(customSlippage) && slippage > 0 ? 'bg-yellow-400 text-white border-yellow-400' : 'bg-[#181E33] text-gray-300 border-[#232B45] disabled:opacity-50 disabled:cursor-not-allowed'}`}
               value={customSlippage}
               onChange={e => {
                 if (gameEnded) return;
@@ -481,20 +481,20 @@ export default function ActionsPanel() {
               }}
               onFocus={() => !gameEnded && setCustomSlippage('')}
             />
-            <span className="ml-2 text-xs text-gray-400 whitespace-nowrap">Slippage</span>
+            <span className="ml-2 md:ml-2 text-xs md:text-sm text-gray-400 whitespace-nowrap">Slippage</span>
           </div>
         </div>
-        <div className={`bg-bg-card-alt rounded-lg p-4 flex flex-col gap-2 ${gameEnded ? 'opacity-50' : ''}`}>
-          <span className="text-sm font-bold text-white mb-2">Estimates</span>
+        <div className={`bg-bg-card-alt rounded-lg p-4 md:p-4 flex flex-col gap-2 md:gap-2 ${gameEnded ? 'opacity-50' : ''}`}>
+          <span className="text-sm md:text-sm font-bold text-white mb-2">Estimates</span>
           <div className="flex justify-between items-center">
-            <span className="text-gray-light">Est. tickets:</span>
-            <span className="font-mono text-white">
+            <span className="text-gray-light text-xs md:text-xs">Est. tickets:</span>
+            <span className="font-mono text-white text-xs md:text-xs">
               {tab === 'buy' && ethAmount && !isNaN(Number(ethAmount)) ? Math.floor(Number(ethAmount) * 10) : '0'}
             </span>
           </div>
         </div>
         <button
-          className="w-full py-3 mt-2 rounded-lg bg-yellow-400 text-white font-bold text-lg hover:bg-yellow-300 transition disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-gray-600"
+          className="w-full py-3 md:py-3 mt-2 rounded-lg bg-yellow-400 text-white font-bold text-base md:text-lg hover:bg-yellow-300 transition disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-gray-600"
           disabled={
             !inputIsValid ||
             txState === 'loading' ||
@@ -510,14 +510,14 @@ export default function ActionsPanel() {
             ) : tab === 'buy' ? 'Buy MEGA Tokens' : 'Sell MEGA Tokens'}
         </button>
         {txState === 'error' && txError && !gameEnded && (
-          <div className="text-red-500 text-sm mt-1">{txError}</div>
+          <div className="text-red-500 text-sm md:text-sm mt-1">{txError}</div>
         )}
         {txState === 'success' && !gameEnded && (
-          <div className="text-green-500 text-sm mt-1">Transaction successful!</div>
+          <div className="text-green-500 text-sm md:text-sm mt-1">Transaction successful!</div>
         )}
         {/* Freeze Button and Status */}
         <button
-          className="w-full py-3 rounded-lg bg-blue-600 text-white font-bold text-lg hover:bg-blue-700 transition disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-gray-600"
+          className="w-full py-3 md:py-3 rounded-lg bg-blue-600 text-white font-bold text-base md:text-lg hover:bg-blue-700 transition disabled:opacity-60 disabled:cursor-not-allowed disabled:bg-gray-600"
           disabled={freezeDisabled}
           onClick={!gameEnded ? handleFreeze : undefined}
         >
@@ -527,7 +527,7 @@ export default function ActionsPanel() {
         </button>
         {/* Do not show the generic freezeMsg error, only show contract revert reasons below */}
         {!isFrozen && isFreezeSimError && freezeSimError && !gameEnded && (
-          <div className="text-red-500 text-sm mt-1">
+          <div className="text-red-500 text-sm md:text-sm mt-1">
             {freezeSimError.message.includes('Game not active') 
               ? 'Game has ended - freezing is no longer available'
               : freezeSimError.message.includes('reverted with the following reason:')
@@ -537,7 +537,7 @@ export default function ActionsPanel() {
           </div>
         )}
         {freezeState === 'success' && !gameEnded && (
-          <div className="text-green-500 text-sm mt-1">Freeze transaction successful!</div>
+          <div className="text-green-500 text-sm md:text-sm mt-1">Freeze transaction successful!</div>
         )}
       </div>
     </DashboardCard>

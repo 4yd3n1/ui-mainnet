@@ -15,7 +15,7 @@ export function useWinnerCheck() {
   const [showPopup, setShowPopup] = useState(false);
   const [winnerInfo, setWinnerInfo] = useState<WinnerInfo | null>(null);
   const [checkingWinners, setCheckingWinners] = useState(false);
-  const timeoutRef = useRef<NodeJS.Timeout>();
+  const timeoutRef = useRef<NodeJS.Timeout | null>(null);
 
   // Read contract state for distribution flags with longer intervals and conditional polling
   const { data: grandPrizeDistributed } = useContractRead({

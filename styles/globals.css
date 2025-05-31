@@ -24,7 +24,7 @@
 }
 
 .neon-border-cyan {
-  border-color: #00fff7 !important;
+  /* Removed border-color to prevent double borders */
   /* Reduced glow for mobile */
   box-shadow: 0 0 2px #00fff7, 0 0 4px #00fff7;
 }
