@@ -1,405 +1,210 @@
 'use client';
-import { useState, useEffect } from 'react';
-import { useAccount, useContractRead, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
-import { ConnectButton } from '@rainbow-me/rainbowkit';
-import { MEGA_ABI, MEGA_CONTRACT_ADDRESS } from '@/contracts/mega';
-import { formatEther, parseEther } from 'viem';
-import Link from 'next/link';
-
-// Type assertion for contract address to satisfy wagmi
-const CONTRACT_ADDRESS = MEGA_CONTRACT_ADDRESS as `0x${string}`;
-
-interface RefundState {
-  refundsEnabled: boolean;
-  refundPool: bigint;
-  refundSupply: bigint;
-  seedWithdrawn: boolean;
-  userTokenBalance: bigint;
-  gameEnded: boolean;
-  isOwner: boolean;
-}
+import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
+import { useGameData } from '@/contexts/GameDataContext';
+import { MEGA_CONTRACT_ADDRESS } from '@/contracts/mega';
+import MEGA_ABI from '@/contracts/MEGA_ABI.json';
+import { useState } from 'react';
+import LoadingSpinner from '@/components/common/LoadingSpinner';
+import { parseEther } from 'viem';
 
 export default function RefundContent() {
-  const { address, isConnected } = useAccount();
-  const [refundState, setRefundState] = useState<RefundState | null>(null);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState<string | null>(null);
-
-  // Contract reads
-  const { data: refundsEnabled } = useContractRead({
-    address: CONTRACT_ADDRESS,
-    abi: MEGA_ABI,
-    functionName: 'refundsEnabled',
-    query: { refetchInterval: 5000 },
-  });
-
-  const { data: gameEnded } = useContractRead({
-    address: CONTRACT_ADDRESS,
-    abi: MEGA_ABI,
-    functionName: 'gameEnded',
-    query: { refetchInterval: 5000 },
-  });
-
-  const { data: refundPool } = useContractRead({
-    address: CONTRACT_ADDRESS,
-    abi: MEGA_ABI,
-    functionName: 'refundPool',
-    query: { refetchInterval: 5000 },
-  });
-
-  const { data: refundSupply } = useContractRead({
-    address: CONTRACT_ADDRESS,
-    abi: MEGA_ABI,
-    functionName: 'refundSupply',
-    query: { refetchInterval: 5000 },
-  });
-
-  const { data: seedWithdrawn } = useContractRead({
-    address: CONTRACT_ADDRESS,
-    abi: MEGA_ABI,
-    functionName: 'seedWithdrawn',
-    query: { refetchInterval: 5000 },
-  });
-
-  const { data: userTokenBalance } = useContractRead({
-    address: CONTRACT_ADDRESS,
-    abi: MEGA_ABI,
-    functionName: 'balanceOf',
-    args: address ? [address as `0x${string}`] : undefined,
-    query: { refetchInterval: 5000, enabled: !!address },
-  });
-
-  const { data: owner } = useContractRead({
-    address: CONTRACT_ADDRESS,
-    abi: MEGA_ABI,
-    functionName: 'owner',
-    query: { refetchInterval: 5000 },
-  });
-
-  // Contract writes
+  const { address } = useAccount();
+  const [refundAmount, setRefundAmount] = useState('');
+  
+  // Get consolidated game data from context
   const {
-    writeContract: enableRefundsWriteContract,
-    data: enableRefundsData,
-    isPending: isEnablingRefunds,
-    isError: isEnableRefundsError,
-    error: enableRefundsError,
-  } = useWriteContract();
+    refundsEnabled,
+    gameEnded,
+    refundPool,
+    refundSupply,
+    seedWithdrawn,
+    userTokenBalance,
+    owner,
+    isLoading
+  } = useGameData();
 
-  const {
-    writeContract: withdrawSeedWriteContract,
-    data: withdrawSeedData,
-    isPending: isWithdrawingSeed,
-    isError: isWithdrawSeedError,
-    error: withdrawSeedError,
-  } = useWriteContract();
+  const isOwner = owner && address && owner.toLowerCase() === address.toLowerCase();
+  const userBalance = userTokenBalance ? Number(userTokenBalance) / 1e18 : 0;
 
-  const {
-    writeContract: claimRefundWriteContract,
-    data: claimRefundData,
-    isPending: isClaimingRefund,
-    isError: isClaimRefundError,
-    error: claimRefundError,
-  } = useWriteContract();
+  // Refund claim transaction
+  const { writeContract: claimRefund, data: refundTxHash, isPending: isRefundPending } = useWriteContract();
+  const { isLoading: isRefundTxLoading } = useWaitForTransactionReceipt({ hash: refundTxHash });
 
-  // Transaction confirmations
-  const { isLoading: isEnableRefundsPending } = useWaitForTransactionReceipt({
-    hash: enableRefundsData,
-    query: { enabled: !!enableRefundsData },
-  });
+  // Seed withdrawal transaction (owner only)
+  const { writeContract: withdrawSeed, data: seedTxHash, isPending: isSeedPending } = useWriteContract();
+  const { isLoading: isSeedTxLoading } = useWaitForTransactionReceipt({ hash: seedTxHash });
 
-  const { isLoading: isWithdrawSeedPending } = useWaitForTransactionReceipt({
-    hash: withdrawSeedData,
-    query: { enabled: !!withdrawSeedData },
-  });
+  // Enable refunds transaction
+  const { writeContract: enableRefunds, data: enableTxHash, isPending: isEnablePending } = useWriteContract();
+  const { isLoading: isEnableTxLoading } = useWaitForTransactionReceipt({ hash: enableTxHash });
 
-  const { isLoading: isClaimRefundPending } = useWaitForTransactionReceipt({
-    hash: claimRefundData,
-    query: { enabled: !!claimRefundData },
-  });
-
-  useEffect(() => {
-    if (
-      refundsEnabled !== undefined &&
-      gameEnded !== undefined &&
-      refundPool !== undefined &&
-      refundSupply !== undefined &&
-      seedWithdrawn !== undefined &&
-      userTokenBalance !== undefined &&
-      owner !== undefined
-    ) {
-      setRefundState({
-        refundsEnabled: refundsEnabled as boolean,
-        refundPool: refundPool as bigint,
-        refundSupply: refundSupply as bigint,
-        seedWithdrawn: seedWithdrawn as boolean,
-        userTokenBalance: userTokenBalance as bigint,
-        gameEnded: gameEnded as boolean,
-        isOwner: address?.toLowerCase() === (owner as string)?.toLowerCase(),
-      });
-      setLoading(false);
-    }
-  }, [refundsEnabled, gameEnded, refundPool, refundSupply, seedWithdrawn, userTokenBalance, owner, address]);
-
-  const handleEnableRefunds = async () => {
-    try {
-      setError(null);
-      enableRefundsWriteContract({
-        address: CONTRACT_ADDRESS,
-        abi: MEGA_ABI,
-        functionName: 'enableRefunds',
-      });
-    } catch (err) {
-      setError('Failed to enable refunds');
-    }
-  };
-
-  const handleWithdrawSeed = async () => {
-    try {
-      setError(null);
-      withdrawSeedWriteContract({
-        address: CONTRACT_ADDRESS,
-        abi: MEGA_ABI,
-        functionName: 'withdrawSeed',
-      });
-    } catch (err) {
-      setError('Failed to withdraw seed');
-    }
-  };
-
-  const handleClaimRefund = async () => {
-    if (!refundState || refundState.userTokenBalance === 0n) return;
+  const handleClaimRefund = () => {
+    if (!refundAmount || parseFloat(refundAmount) <= 0) return;
     
-    try {
-      setError(null);
-      claimRefundWriteContract({
-        address: CONTRACT_ADDRESS,
-        abi: MEGA_ABI,
-        functionName: 'claimRefund',
-        args: [refundState.userTokenBalance],
-      });
-    } catch (err) {
-      setError('Failed to claim refund');
-    }
+    claimRefund({
+      address: MEGA_CONTRACT_ADDRESS as `0x${string}`,
+      abi: MEGA_ABI,
+      functionName: 'claimRefund',
+      args: [parseEther(refundAmount)],
+    });
   };
 
-  const calculateRefundAmount = (tokenAmount: bigint): bigint => {
-    if (!refundState || refundState.refundSupply === 0n) return 0n;
-    return (tokenAmount * refundState.refundPool) / refundState.refundSupply;
+  const handleWithdrawSeed = () => {
+    withdrawSeed({
+      address: MEGA_CONTRACT_ADDRESS as `0x${string}`,
+      abi: MEGA_ABI,
+      functionName: 'withdrawSeed',
+    });
   };
 
-  // Handle errors from contract writes
-  useEffect(() => {
-    if (isEnableRefundsError && enableRefundsError) {
-      setError('Failed to enable refunds: ' + enableRefundsError.message);
-    }
-    if (isWithdrawSeedError && withdrawSeedError) {
-      setError('Failed to withdraw seed: ' + withdrawSeedError.message);
-    }
-    if (isClaimRefundError && claimRefundError) {
-      setError('Failed to claim refund: ' + claimRefundError.message);
-    }
-  }, [isEnableRefundsError, enableRefundsError, isWithdrawSeedError, withdrawSeedError, isClaimRefundError, claimRefundError]);
+  const handleEnableRefunds = () => {
+    enableRefunds({
+      address: MEGA_CONTRACT_ADDRESS as `0x${string}`,
+      abi: MEGA_ABI,
+      functionName: 'enableRefunds',
+    });
+  };
 
-  if (!isConnected) {
-    return (
-      <main className="min-h-screen flex items-center justify-center bg-bg-main text-white">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold mb-4">Emergency Refunds</h1>
-          <p className="text-lg mb-8">Please connect your wallet to access the refund system.</p>
-          
-          {/* Wallet Connect Button */}
-          <div className="mb-6 flex justify-center">
-            <ConnectButton 
-              showBalance={false} 
-              accountStatus="address" 
-              chainStatus="icon"
-            />
-          </div>
-          
-          <Link href="/dashboard" className="bg-yellow-500 text-black px-6 py-3 rounded-lg font-bold hover:bg-yellow-400 transition-colors">
-            Go to Dashboard
-          </Link>
-        </div>
-      </main>
-    );
-  }
+  // Calculate expected refund
+  const expectedRefund = refundAmount && refundPool && refundSupply && Number(refundSupply) > 0
+    ? (parseFloat(refundAmount) * Number(refundPool) / Number(refundSupply)) / 1e18
+    : 0;
 
-  if (loading) {
+  if (isLoading) {
     return (
-      <main className="min-h-screen flex items-center justify-center bg-bg-main text-white">
-        <p>Loading refund information...</p>
-      </main>
-    );
-  }
-
-  if (!refundState) {
-    return (
-      <main className="min-h-screen flex items-center justify-center bg-bg-main text-white">
-        <div className="text-center">
-          <h1 className="text-4xl font-bold mb-4">Error</h1>
-          <p className="text-lg mb-8">Unable to load refund information.</p>
-          <Link href="/dashboard" className="bg-yellow-500 text-black px-6 py-3 rounded-lg font-bold hover:bg-yellow-400 transition-colors">
-            Go to Dashboard
-          </Link>
-        </div>
-      </main>
+      <div className="flex items-center justify-center min-h-screen">
+        <LoadingSpinner />
+      </div>
     );
   }
 
   return (
-    <main className="min-h-screen bg-bg-main text-white p-4">
-      <div className="max-w-4xl mx-auto">
-        {/* Header */}
-        <div className="text-center mb-8">
-          <h1 className="text-5xl font-bold mb-4 text-gold">🚨 Emergency Refunds</h1>
-          <p className="text-lg text-gray-300">
-            Safety mechanism for fair fund recovery when lottery distributions are delayed
+    <div className="max-w-4xl mx-auto p-6">
+      <h1 className="text-3xl font-bold mb-8 text-yellow-400">Emergency Refund System</h1>
+      
+      {!gameEnded ? (
+        <div className="bg-bg-card rounded-lg p-6">
+          <p className="text-gray-light">Game is still active. Refunds are only available after the game ends.</p>
+        </div>
+      ) : !refundsEnabled ? (
+        <div className="bg-bg-card rounded-lg p-6">
+          <h2 className="text-xl font-bold mb-4">Refunds Not Yet Enabled</h2>
+          <p className="text-gray-light mb-4">
+            The refund system hasn't been activated yet. If prize distributions fail, anyone can enable refunds after 30 minutes.
           </p>
-          <Link href="/dashboard" className="inline-block mt-4 text-gold hover:text-yellow-400 transition-colors">
-            ← Back to Dashboard
-          </Link>
+          <button
+            onClick={handleEnableRefunds}
+            disabled={isEnablePending || isEnableTxLoading}
+            className="px-6 py-3 bg-yellow-500 hover:bg-yellow-600 disabled:bg-gray-600 text-black font-bold rounded-lg transition-colors"
+          >
+            {isEnablePending || isEnableTxLoading ? <LoadingSpinner /> : 'Enable Refunds'}
+          </button>
         </div>
-
-        {/* Status Cards */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          <div className="bg-gray-800 p-6 rounded-lg">
-            <h3 className="text-xl font-bold mb-2">Game Status</h3>
-            <p className={`text-lg ${refundState.gameEnded ? 'text-green-400' : 'text-red-400'}`}>
-              {refundState.gameEnded ? '✅ Game Ended' : '❌ Game Active'}
-            </p>
+      ) : (
+        <>
+          {/* Refund Stats */}
+          <div className="bg-bg-card rounded-lg p-6 mb-6">
+            <h2 className="text-xl font-bold mb-4">Refund Pool Status</h2>
+            <div className="space-y-2">
+              <div className="flex justify-between">
+                <span className="text-gray-light">Total Refund Pool:</span>
+                <span className="font-bold">{refundPool ? (Number(refundPool) / 1e18).toFixed(4) : '0'} ETH</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-light">Total Token Supply:</span>
+                <span className="font-bold">{refundSupply ? (Number(refundSupply) / 1e18).toFixed(2) : '0'} MEGA</span>
+              </div>
+              <div className="flex justify-between">
+                <span className="text-gray-light">Seed Withdrawn:</span>
+                <span className="font-bold">{seedWithdrawn ? 'Yes' : 'No'}</span>
+              </div>
+            </div>
           </div>
 
-          <div className="bg-gray-800 p-6 rounded-lg">
-            <h3 className="text-xl font-bold mb-2">Refunds Status</h3>
-            <p className={`text-lg ${refundState.refundsEnabled ? 'text-green-400' : 'text-yellow-400'}`}>
-              {refundState.refundsEnabled ? '✅ Enabled' : '⏰ Waiting'}
-            </p>
-          </div>
+          {/* Owner Seed Withdrawal */}
+          {isOwner && !seedWithdrawn && (
+            <div className="bg-bg-card rounded-lg p-6 mb-6">
+              <h2 className="text-xl font-bold mb-4">Owner: Withdraw Seed</h2>
+              <p className="text-gray-light mb-4">
+                As the owner, you can withdraw the initial 0.1 ETH seed amount.
+              </p>
+              <button
+                onClick={handleWithdrawSeed}
+                disabled={isSeedPending || isSeedTxLoading}
+                className="px-6 py-3 bg-blue-500 hover:bg-blue-600 disabled:bg-gray-600 text-white font-bold rounded-lg transition-colors"
+              >
+                {isSeedPending || isSeedTxLoading ? <LoadingSpinner /> : 'Withdraw 0.1 ETH Seed'}
+              </button>
+            </div>
+          )}
 
-          <div className="bg-gray-800 p-6 rounded-lg">
-            <h3 className="text-xl font-bold mb-2">Refund Pool</h3>
-            <p className="text-lg text-gold">
-              {formatEther(refundState.refundPool)} ETH
-            </p>
-          </div>
-        </div>
-
-        {/* Refund Actions */}
-        {!refundState.gameEnded && (
-          <div className="bg-gray-800 p-6 rounded-lg mb-8">
-            <h2 className="text-2xl font-bold mb-4">⏰ Game Still Active</h2>
-            <p className="text-gray-300 mb-4">
-              The emergency refund system is only available after the game ends and a 30-minute delay period.
-            </p>
-            <Link href="/dashboard" className="bg-yellow-500 text-black px-6 py-3 rounded-lg font-bold hover:bg-yellow-400 transition-colors">
-              Continue Playing
-            </Link>
-          </div>
-        )}
-
-        {refundState.gameEnded && !refundState.refundsEnabled && (
-          <div className="bg-gray-800 p-6 rounded-lg mb-8">
-            <h2 className="text-2xl font-bold mb-4">🕐 Enable Emergency Refunds</h2>
-            <p className="text-gray-300 mb-4">
-              The game has ended but refunds haven't been enabled yet. Anyone can enable refunds after the 30-minute delay period.
-            </p>
-            <button
-              onClick={handleEnableRefunds}
-              disabled={isEnablingRefunds || isEnableRefundsPending}
-              className="bg-red-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-red-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-            >
-              {isEnablingRefunds || isEnableRefundsPending ? 'Enabling...' : 'Enable Refunds'}
-            </button>
-          </div>
-        )}
-
-        {refundState.refundsEnabled && (
-          <>
-            {/* Owner Actions */}
-            {refundState.isOwner && (
-              <div className="bg-blue-900 p-6 rounded-lg mb-8">
-                <h2 className="text-2xl font-bold mb-4">👑 Owner Actions</h2>
-                <div className="mb-4">
-                  <p className="text-gray-300 mb-2">
-                    Seed Status: {refundState.seedWithdrawn ? '✅ Withdrawn' : '💰 Available (0.1 ETH)'}
-                  </p>
+          {/* User Refund Claim */}
+          {address && (
+            <div className="bg-bg-card rounded-lg p-6">
+              <h2 className="text-xl font-bold mb-4">Claim Your Refund</h2>
+              <div className="space-y-4">
+                <div>
+                  <p className="text-gray-light mb-2">Your MEGA Balance:</p>
+                  <p className="text-2xl font-bold">{userBalance.toFixed(4)} MEGA</p>
                 </div>
-                {!refundState.seedWithdrawn && (
+                
+                <div>
+                  <label className="block text-sm font-medium mb-2">Amount to refund:</label>
+                  <input
+                    type="number"
+                    step="0.0001"
+                    value={refundAmount}
+                    onChange={(e) => setRefundAmount(e.target.value)}
+                    max={userBalance}
+                    className="w-full px-4 py-2 bg-bg-card-alt rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
+                    placeholder="Enter MEGA amount"
+                  />
                   <button
-                    onClick={handleWithdrawSeed}
-                    disabled={isWithdrawingSeed || isWithdrawSeedPending}
-                    className="bg-blue-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-blue-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
+                    onClick={() => setRefundAmount(userBalance.toString())}
+                    className="text-sm text-yellow-400 hover:underline mt-1"
                   >
-                    {isWithdrawingSeed || isWithdrawSeedPending ? 'Withdrawing...' : 'Withdraw Seed (0.1 ETH)'}
+                    Max: {userBalance.toFixed(4)} MEGA
                   </button>
+                </div>
+
+                {refundAmount && parseFloat(refundAmount) > 0 && (
+                  <div className="bg-bg-card-alt rounded-lg p-4">
+                    <p className="text-sm text-gray-light">Expected refund:</p>
+                    <p className="text-xl font-bold text-yellow-400">
+                      ~{expectedRefund.toFixed(6)} ETH
+                    </p>
+                  </div>
                 )}
+
+                <button
+                  onClick={handleClaimRefund}
+                  disabled={!refundAmount || parseFloat(refundAmount) <= 0 || parseFloat(refundAmount) > userBalance || isRefundPending || isRefundTxLoading}
+                  className="w-full px-6 py-3 bg-yellow-500 hover:bg-yellow-600 disabled:bg-gray-600 text-black font-bold rounded-lg transition-colors"
+                >
+                  {isRefundPending || isRefundTxLoading ? <LoadingSpinner /> : 'Claim Refund'}
+                </button>
               </div>
-            )}
-
-            {/* Player Refund Actions */}
-            <div className="bg-green-900 p-6 rounded-lg mb-8">
-              <h2 className="text-2xl font-bold mb-4">💸 Your Refund</h2>
-              
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
-                <div>
-                  <p className="text-gray-300">Your Token Balance:</p>
-                  <p className="text-xl font-bold text-gold">
-                    {formatEther(refundState.userTokenBalance)} MEGA
-                  </p>
-                </div>
-                <div>
-                  <p className="text-gray-300">Claimable ETH:</p>
-                  <p className="text-xl font-bold text-green-400">
-                    {formatEther(calculateRefundAmount(refundState.userTokenBalance))} ETH
-                  </p>
-                </div>
-              </div>
-
-              {refundState.userTokenBalance > 0n ? (
-                <div>
-                  <p className="text-gray-300 mb-4">
-                    You can claim your proportional share of the refund pool by burning your MEGA tokens.
-                  </p>
-                  <button
-                    onClick={handleClaimRefund}
-                    disabled={isClaimingRefund || isClaimRefundPending}
-                    className="bg-green-600 text-white px-6 py-3 rounded-lg font-bold hover:bg-green-700 disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                  >
-                    {isClaimingRefund || isClaimRefundPending ? 'Claiming...' : 'Claim Full Refund'}
-                  </button>
-                </div>
-              ) : (
-                <div className="text-gray-400">
-                  <p>You don't have any MEGA tokens to refund.</p>
-                </div>
-              )}
             </div>
+          )}
 
-            {/* Refund Information */}
-            <div className="bg-gray-800 p-6 rounded-lg">
-              <h2 className="text-2xl font-bold mb-4">ℹ️ How Refunds Work</h2>
-              <ul className="space-y-2 text-gray-300">
-                <li>• <span className="text-green-400">Proportional Distribution:</span> ETH is distributed based on your token holdings</li>
-                <li>• <span className="text-blue-400">Token Burning:</span> Your tokens are burned when you claim your refund</li>
-                <li>• <span className="text-yellow-400">Fair & Safe:</span> No admin can steal funds, everyone gets their fair share</li>
-                <li>• <span className="text-purple-400">Emergency Only:</span> This system activates when normal lottery distributions fail</li>
-              </ul>
+          {!address && (
+            <div className="bg-bg-card rounded-lg p-6">
+              <p className="text-gray-light">Please connect your wallet to claim refunds.</p>
             </div>
-          </>
-        )}
+          )}
+        </>
+      )}
 
-        {error && (
-          <div className="bg-red-800 p-4 rounded-lg mt-4">
-            <p className="text-white">{error}</p>
-            <button 
-              onClick={() => setError(null)}
-              className="mt-2 text-sm text-red-200 hover:text-white underline"
-            >
-              Dismiss
-            </button>
-          </div>
-        )}
+      {/* Info Box */}
+      <div className="mt-8 bg-yellow-900/20 border border-yellow-500/30 rounded-lg p-6">
+        <h3 className="text-lg font-bold text-yellow-400 mb-2">How Refunds Work</h3>
+        <ul className="list-disc list-inside text-gray-light space-y-1">
+          <li>Refunds are only available if the game ends and distributions fail</li>
+          <li>Anyone can enable refunds 30 minutes after game end</li>
+          <li>You receive a proportional share of the refund pool based on your token holdings</li>
+          <li>Burning tokens for refunds is irreversible</li>
+        </ul>
       </div>
-    </main>
+    </div>
   );
 } 

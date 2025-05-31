@@ -11,13 +11,6 @@ export function useIsOnSepolia() {
   
   const isOnSepolia = isConnected && chainId === sepolia.id;
   
-  console.log('[useIsOnSepolia] Network check:', {
-    chainId,
-    isConnected,
-    sepoliaId: sepolia.id,
-    isOnSepolia
-  });
-  
   return isOnSepolia;
 }
 
@@ -27,7 +20,6 @@ export function useSepoliaRedirect() {
 
   useEffect(() => {
     if (!isOnSepolia) {
-      console.log('[useSepoliaRedirect] Not on Sepolia, redirecting to landing page');
       router.push('/');
     }
   }, [isOnSepolia, router]);

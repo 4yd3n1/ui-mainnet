@@ -5,6 +5,7 @@ import TimeRemainingCard from './components/TimeRemainingCard';
 import GameStatsCard from './components/GameStatsCard';
 import UserStatsCard from './components/UserStatsCard';
 import ActionsPanel from './components/ActionsPanel';
+import AdminDistributionPanel from './components/AdminDistributionPanel';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 export default function DashboardContent() {
@@ -46,6 +47,10 @@ export default function DashboardContent() {
               <div className="flex flex-col h-full min-w-0 min-w-[280px] max-w-[400px] w-full md:w-1/3 neon-border-cyan rounded-xl flex-1"><GameStatsCard /></div>
               <div className="flex flex-col h-full min-w-0 min-w-[280px] max-w-[400px] w-full md:w-1/3 neon-border-cyan rounded-xl flex-1"><UserStatsCard /></div>
               <div className="flex flex-col h-full min-w-0 min-w-[280px] max-w-[400px] w-full md:w-1/3 neon-border-cyan rounded-xl flex-1"><ActionsPanel /></div>
+            </div>
+            {/* Admin Distribution Panel - Only visible to owner after game ends */}
+            <div className="w-full max-w-4xl mt-16 neon-border-yellow rounded-xl">
+              <AdminDistributionPanel />
             </div>
           </div>
         </div>

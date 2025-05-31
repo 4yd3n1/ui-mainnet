@@ -54,6 +54,9 @@ export const config = createConfig({
     {
       appName: 'Make Ethereum Great Again',
       projectId: PROJECT_ID,
+      appDescription: 'Join the ultimate on-chain rally! Connect your wallet to participate in the race to $15K market cap.',
+      appUrl: typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3001',
+      appIcon: typeof window !== 'undefined' ? `${window.location.origin}/favicon-32x32.png` : 'http://localhost:3001/favicon-32x32.png',
     }
   ),
 });

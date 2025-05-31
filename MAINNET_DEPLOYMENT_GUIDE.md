@@ -12,9 +12,9 @@
 ### 2. **Financial Preparation**
 - [ ] Ensure deployer wallet has sufficient ETH:
   - Contract deployment: ~0.5 ETH (gas)
-  - Seed amount: 6 ETH (or your chosen amount)
+  - Seed amount: 0.1 ETH (current contract amount)
   - Buffer for high gas prices: ~0.5 ETH
-  - **Total needed: ~7+ ETH**
+  - **Total needed: ~1.1+ ETH**
 - [ ] Have backup wallet ready for emergencies
 
 ### 3. **Legal & Compliance**
@@ -27,13 +27,16 @@
 
 ### 1. **Update Game Parameters** (contracts/MEGA.sol)
 ```solidity
-// Current (Testnet):
+// Current Live Contract (matches deployed version):
 uint256 public constant SEED_ETH = 0.1 ether;
-uint256 public constant MARKETCAP_USD_CAP = 15_000 * 1e18;  // $15k
+uint256 public constant MARKETCAP_USD_CAP = 20_000 * 1e18;  // $20k
+uint256 public constant GAME_DURATION = 1 hours;
+uint256 public constant INITIAL_TOKENS = 1_000 * 1e18;  // 1K tokens
+uint256 public constant QUALIFY_THRESHOLD = 0.1 ether;
 
-// Production (Mainnet):
-uint256 public constant SEED_ETH = 6 ether;  // Or your chosen amount
-uint256 public constant MARKETCAP_USD_CAP = 500_000 * 1e18;  // $500k or higher
+// Production (Alternative - higher stakes):
+// uint256 public constant SEED_ETH = 6 ether;  // Optional higher amount
+// uint256 public constant MARKETCAP_USD_CAP = 500_000 * 1e18;  // Optional higher target
 ```
 
 ### 2. **Update Chainlink VRF Configuration**
@@ -70,7 +73,7 @@ const SUBSCRIPTION_ID = process.env.MAINNET_SUBSCRIPTION_ID;
 const CALLBACK_GAS_LIMIT = 2500000; // Higher for mainnet
 
 // Update seed amount
-const SEED_ETH = ethers.parseEther("6"); // Production amount
+const SEED_ETH = ethers.parseEther("0.1"); // Current contract amount
 ```
 
 ## 🌐 Frontend Updates

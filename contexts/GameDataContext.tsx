@@ -36,6 +36,10 @@ interface GameData {
   owner?: string;
   gameDuration?: bigint;
   
+  // VRF status
+  randomWordRequested?: boolean;
+  randomWordReceived?: boolean;
+  
   // User-specific data
   userBalance?: bigint;
   userContributions?: bigint;
@@ -174,6 +178,17 @@ export function GameDataProvider({ children }: { children: React.ReactNode }) {
         abi: MEGA_ABI,
         functionName: 'GAME_DURATION',
       },
+      // VRF status
+      {
+        address: MEGA_CONTRACT_ADDRESS as `0x${string}`,
+        abi: MEGA_ABI,
+        functionName: 'randomWordRequested',
+      },
+      {
+        address: MEGA_CONTRACT_ADDRESS as `0x${string}`,
+        abi: MEGA_ABI,
+        functionName: 'randomWordReceived',
+      },
     ];
     
     // Add user-specific calls if wallet is connected
@@ -271,6 +286,8 @@ export function GameDataProvider({ children }: { children: React.ReactNode }) {
       seedWithdrawn,
       owner,
       gameDuration,
+      randomWordRequested,
+      randomWordReceived,
       ...userData
     ] = dataToUse;
     
@@ -331,6 +348,10 @@ export function GameDataProvider({ children }: { children: React.ReactNode }) {
       // Contract metadata
       owner: owner?.result as string | undefined,
       gameDuration: gameDuration?.result as bigint | undefined,
+      
+      // VRF status
+      randomWordRequested: randomWordRequested?.result as boolean | undefined,
+      randomWordReceived: randomWordReceived?.result as boolean | undefined,
       
       // User data
       userContributions: userContributions?.result as bigint | undefined,

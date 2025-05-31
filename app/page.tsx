@@ -1,6 +1,7 @@
 'use client';
 import { useState } from 'react';
 import RulesModal from '@/components/RulesModal';
+import { ConnectButton } from '@rainbow-me/rainbowkit';
 
 export default function HomePage() {
   const [rulesOpen, setRulesOpen] = useState(false);
@@ -17,9 +18,14 @@ export default function HomePage() {
         }}
       >
         <div
-          className="min-h-screen flex flex-col items-center justify-center w-full"
+          className="min-h-screen flex flex-col items-center justify-center w-full relative"
           style={{ background: 'rgba(0,0,0,0.7)' }}
         >
+          {/* Wallet Connect Button - positioned same as dashboard */}
+          <div className="absolute top-8 right-8">
+            <ConnectButton showBalance={false} accountStatus="avatar" chainStatus="icon" />
+          </div>
+
           <div className="text-center max-w-4xl mx-auto">
             {/* Logo */}
             <h1 className="text-4xl md:text-6xl font-bold mb-6">
