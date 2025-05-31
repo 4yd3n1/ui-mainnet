@@ -137,7 +137,7 @@ export default function TimeRemainingCard() {
       
       {/* Progress to goal */}
       <div className="text-sm text-gray-300">
-        {marketCapProgress ? Math.round(marketCapProgress) : 0}% to go!
+        {marketCapProgress ? Math.round(100 - marketCapProgress) : 100}% to go!
       </div>
     </section>
   );
