@@ -1,6 +1,6 @@
 'use client';
 
-import React, { createContext, useContext, useMemo } from 'react';
+import React, { createContext, useContext, useMemo, useState, useEffect } from 'react';
 import { useReadContracts, useAccount } from 'wagmi';
 import { MEGA_CONTRACT_ADDRESS } from '@/contracts/mega';
 import MEGA_ABI from '@/contracts/MEGA_ABI.json';
@@ -59,6 +59,9 @@ const GameDataContext = createContext<GameData | undefined>(undefined);
 
 export function GameDataProvider({ children }: { children: React.ReactNode }) {
   const { address } = useAccount();
+  
+  // Cache for last valid data to prevent flickering
+  const [cachedData, setCachedData] = useState<any>(null);
   
   // Define all contract calls to batch
   const contractCalls = useMemo(() => {
@@ -218,13 +221,31 @@ export function GameDataProvider({ children }: { children: React.ReactNode }) {
     query: {
       refetchInterval: 10000, // Refetch every 10 seconds
       refetchIntervalInBackground: false,
+      staleTime: 5000, // Consider data stale after 5 seconds
+      gcTime: 60000, // Keep in cache for 60 seconds
+      refetchOnWindowFocus: false, // Don't refetch on window focus
     },
   });
   
+  // Update cache only when we have valid new data
+  useEffect(() => {
+    if (data && !isLoading && !isError) {
+      // Check if we have valid data (not all undefined)
+      const hasValidData = data.some(result => result?.result !== undefined);
+      if (hasValidData) {
+        setCachedData(data);
+      }
+    }
+  }, [data, isLoading, isError]);
+  
+  // Use cached data if current data is loading or invalid
+  const dataToUse = (data && !isLoading && data.some(result => result?.result !== undefined)) ? data : cachedData;
+  
   // Process the data into a usable format
   const gameData = useMemo<GameData>(() => {
-    if (!data) {
-      return { isLoading, isError };
+    if (!dataToUse) {
+      // Only show loading on initial load, not on refetch
+      return { isLoading: isLoading && !cachedData, isError };
     }
     
     // Extract base data (always present)
@@ -251,7 +272,7 @@ export function GameDataProvider({ children }: { children: React.ReactNode }) {
       owner,
       gameDuration,
       ...userData
-    ] = data;
+    ] = dataToUse;
     
     // Extract user data if available
     const [userContributions, userTickets, userQualified, userTokenBalance, userLastFreeze] = 
@@ -319,7 +340,7 @@ export function GameDataProvider({ children }: { children: React.ReactNode }) {
       userLastFreeze: userLastFreeze?.result as bigint | undefined,
       
       // Loading states
-      isLoading,
+      isLoading: isLoading && !cachedData,
       isError,
       
       // Calculated values
@@ -328,7 +349,7 @@ export function GameDataProvider({ children }: { children: React.ReactNode }) {
       timeRemaining,
       isFrozen,
     };
-  }, [data, isLoading, isError, address]);
+  }, [dataToUse, isLoading, isError, address]);
   
   return (
     <GameDataContext.Provider value={gameData}>
