@@ -19,12 +19,30 @@ interface GameData {
   freezeEndTime?: bigint;
   failed?: boolean;
   
+  // Distribution states
+  grandPrizeDistributed?: boolean;
+  runnerUpsDistributed?: boolean;
+  earlyBirdsDistributed?: boolean;
+  ownerPaid?: boolean;
+  lastGrandWinner?: string;
+  
+  // Refund states
+  refundsEnabled?: boolean;
+  refundPool?: bigint;
+  refundSupply?: bigint;
+  seedWithdrawn?: boolean;
+  
+  // Contract metadata
+  owner?: string;
+  gameDuration?: bigint;
+  
   // User-specific data
   userBalance?: bigint;
   userContributions?: bigint;
   userTickets?: bigint;
   userQualified?: boolean;
   userTokenBalance?: bigint;
+  userLastFreeze?: bigint;
   
   // Loading states
   isLoading: boolean;
@@ -44,56 +62,114 @@ export function GameDataProvider({ children }: { children: React.ReactNode }) {
   
   // Define all contract calls to batch
   const contractCalls = useMemo(() => {
-    const baseCalls = [
+    const baseCalls: any[] = [
       {
-        address: MEGA_CONTRACT_ADDRESS,
+        address: MEGA_CONTRACT_ADDRESS as `0x${string}`,
         abi: MEGA_ABI,
         functionName: 'getMarketCapUSD',
       },
       {
-        address: MEGA_CONTRACT_ADDRESS,
+        address: MEGA_CONTRACT_ADDRESS as `0x${string}`,
         abi: MEGA_ABI,
         functionName: 'getPrice',
       },
       {
-        address: MEGA_CONTRACT_ADDRESS,
+        address: MEGA_CONTRACT_ADDRESS as `0x${string}`,
         abi: MEGA_ABI,
         functionName: 'ethReserve',
       },
       {
-        address: MEGA_CONTRACT_ADDRESS,
+        address: MEGA_CONTRACT_ADDRESS as `0x${string}`,
         abi: MEGA_ABI,
         functionName: 'tokenReserve',
       },
       {
-        address: MEGA_CONTRACT_ADDRESS,
+        address: MEGA_CONTRACT_ADDRESS as `0x${string}`,
         abi: MEGA_ABI,
         functionName: 'qualifiedCount',
       },
       {
-        address: MEGA_CONTRACT_ADDRESS,
+        address: MEGA_CONTRACT_ADDRESS as `0x${string}`,
         abi: MEGA_ABI,
         functionName: 'totalTickets',
       },
       {
-        address: MEGA_CONTRACT_ADDRESS,
+        address: MEGA_CONTRACT_ADDRESS as `0x${string}`,
         abi: MEGA_ABI,
         functionName: 'gameEnded',
       },
       {
-        address: MEGA_CONTRACT_ADDRESS,
+        address: MEGA_CONTRACT_ADDRESS as `0x${string}`,
         abi: MEGA_ABI,
         functionName: 'gameStartTime',
       },
       {
-        address: MEGA_CONTRACT_ADDRESS,
+        address: MEGA_CONTRACT_ADDRESS as `0x${string}`,
         abi: MEGA_ABI,
         functionName: 'freezeEndTime',
       },
       {
-        address: MEGA_CONTRACT_ADDRESS,
+        address: MEGA_CONTRACT_ADDRESS as `0x${string}`,
         abi: MEGA_ABI,
         functionName: 'failed',
+      },
+      // Distribution states
+      {
+        address: MEGA_CONTRACT_ADDRESS as `0x${string}`,
+        abi: MEGA_ABI,
+        functionName: 'grandPrizeDistributed',
+      },
+      {
+        address: MEGA_CONTRACT_ADDRESS as `0x${string}`,
+        abi: MEGA_ABI,
+        functionName: 'runnerUpsDistributed',
+      },
+      {
+        address: MEGA_CONTRACT_ADDRESS as `0x${string}`,
+        abi: MEGA_ABI,
+        functionName: 'earlyBirdsDistributed',
+      },
+      {
+        address: MEGA_CONTRACT_ADDRESS as `0x${string}`,
+        abi: MEGA_ABI,
+        functionName: 'ownerPaid',
+      },
+      {
+        address: MEGA_CONTRACT_ADDRESS as `0x${string}`,
+        abi: MEGA_ABI,
+        functionName: 'lastGrandWinner',
+      },
+      // Refund states
+      {
+        address: MEGA_CONTRACT_ADDRESS as `0x${string}`,
+        abi: MEGA_ABI,
+        functionName: 'refundsEnabled',
+      },
+      {
+        address: MEGA_CONTRACT_ADDRESS as `0x${string}`,
+        abi: MEGA_ABI,
+        functionName: 'refundPool',
+      },
+      {
+        address: MEGA_CONTRACT_ADDRESS as `0x${string}`,
+        abi: MEGA_ABI,
+        functionName: 'refundSupply',
+      },
+      {
+        address: MEGA_CONTRACT_ADDRESS as `0x${string}`,
+        abi: MEGA_ABI,
+        functionName: 'seedWithdrawn',
+      },
+      // Contract metadata
+      {
+        address: MEGA_CONTRACT_ADDRESS as `0x${string}`,
+        abi: MEGA_ABI,
+        functionName: 'owner',
+      },
+      {
+        address: MEGA_CONTRACT_ADDRESS as `0x${string}`,
+        abi: MEGA_ABI,
+        functionName: 'GAME_DURATION',
       },
     ];
     
@@ -101,28 +177,34 @@ export function GameDataProvider({ children }: { children: React.ReactNode }) {
     if (address) {
       baseCalls.push(
         {
-          address: MEGA_CONTRACT_ADDRESS,
+          address: MEGA_CONTRACT_ADDRESS as `0x${string}`,
           abi: MEGA_ABI,
           functionName: 'contributions',
-          args: [address],
+          arguments: [address],
         },
         {
-          address: MEGA_CONTRACT_ADDRESS,
+          address: MEGA_CONTRACT_ADDRESS as `0x${string}`,
           abi: MEGA_ABI,
           functionName: 'lotteryTickets',
-          args: [address],
+          arguments: [address],
         },
         {
-          address: MEGA_CONTRACT_ADDRESS,
+          address: MEGA_CONTRACT_ADDRESS as `0x${string}`,
           abi: MEGA_ABI,
           functionName: 'isQualified',
-          args: [address],
+          arguments: [address],
         },
         {
-          address: MEGA_CONTRACT_ADDRESS,
+          address: MEGA_CONTRACT_ADDRESS as `0x${string}`,
           abi: MEGA_ABI,
           functionName: 'balanceOf',
-          args: [address],
+          arguments: [address],
+        },
+        {
+          address: MEGA_CONTRACT_ADDRESS as `0x${string}`,
+          abi: MEGA_ABI,
+          functionName: 'lastFreeze',
+          arguments: [address],
         }
       );
     }
@@ -157,12 +239,23 @@ export function GameDataProvider({ children }: { children: React.ReactNode }) {
       gameStartTime,
       freezeEndTime,
       failed,
+      grandPrizeDistributed,
+      runnerUpsDistributed,
+      earlyBirdsDistributed,
+      ownerPaid,
+      lastGrandWinner,
+      refundsEnabled,
+      refundPool,
+      refundSupply,
+      seedWithdrawn,
+      owner,
+      gameDuration,
       ...userData
     ] = data;
     
     // Extract user data if available
-    const [userContributions, userTickets, userQualified, userTokenBalance] = 
-      address ? userData : [undefined, undefined, undefined, undefined];
+    const [userContributions, userTickets, userQualified, userTokenBalance, userLastFreeze] = 
+      address ? userData : [undefined, undefined, undefined, undefined, undefined];
     
     // Calculate derived values
     const marketCapUSDNum = marketCapUSD?.result ? Number(marketCapUSD.result) / 1e18 : 0;
@@ -201,11 +294,29 @@ export function GameDataProvider({ children }: { children: React.ReactNode }) {
       freezeEndTime: freezeEndTime?.result as bigint | undefined,
       failed: failed?.result as boolean | undefined,
       
+      // Distribution states
+      grandPrizeDistributed: grandPrizeDistributed?.result as boolean | undefined,
+      runnerUpsDistributed: runnerUpsDistributed?.result as boolean | undefined,
+      earlyBirdsDistributed: earlyBirdsDistributed?.result as boolean | undefined,
+      ownerPaid: ownerPaid?.result as boolean | undefined,
+      lastGrandWinner: lastGrandWinner?.result as string | undefined,
+      
+      // Refund states
+      refundsEnabled: refundsEnabled?.result as boolean | undefined,
+      refundPool: refundPool?.result as bigint | undefined,
+      refundSupply: refundSupply?.result as bigint | undefined,
+      seedWithdrawn: seedWithdrawn?.result as boolean | undefined,
+      
+      // Contract metadata
+      owner: owner?.result as string | undefined,
+      gameDuration: gameDuration?.result as bigint | undefined,
+      
       // User data
       userContributions: userContributions?.result as bigint | undefined,
       userTickets: userTickets?.result as bigint | undefined,
       userQualified: userQualified?.result as boolean | undefined,
       userTokenBalance: userTokenBalance?.result as bigint | undefined,
+      userLastFreeze: userLastFreeze?.result as bigint | undefined,
       
       // Loading states
       isLoading,
