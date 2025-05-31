@@ -33,7 +33,7 @@ export default function ActionsPanel() {
     functionName: 'balanceOf',
     args: address ? [address as `0x${string}`] : undefined,
     account: address,
-    query: { refetchInterval: 5000, enabled: !!address },
+    query: { refetchInterval: 10000, enabled: !!address },
   });
 
   // Add game state check
@@ -41,7 +41,7 @@ export default function ActionsPanel() {
     address: CONTRACT_ADDRESS,
     abi: MEGA_ABI,
     functionName: 'gameEnded',
-    query: { refetchInterval: 5000 },
+    query: { refetchInterval: 10000 },
   });
 
   // Pool math: getPrice (ETH per MEGA)
@@ -49,7 +49,7 @@ export default function ActionsPanel() {
     address: CONTRACT_ADDRESS,
     abi: MEGA_ABI,
     functionName: 'getPrice',
-    query: { refetchInterval: 5000 },
+    query: { refetchInterval: 10000 },
   });
 
   // Transaction state
@@ -66,7 +66,7 @@ export default function ActionsPanel() {
     address: CONTRACT_ADDRESS,
     abi: MEGA_ABI,
     functionName: 'freezeEndTime',
-    query: { refetchInterval: 5000 },
+    query: { refetchInterval: 10000 },
   });
 
   const { data: lastFreeze, refetch: refetchLastFreeze } = useContractRead({
@@ -74,7 +74,7 @@ export default function ActionsPanel() {
     abi: MEGA_ABI,
     functionName: 'lastFreeze',
     args: address ? [address as `0x${string}`] : undefined,
-    query: { refetchInterval: 5000, enabled: !!address },
+    query: { refetchInterval: 10000, enabled: !!address },
   });
 
   // Timer for live countdown
@@ -205,14 +205,14 @@ export default function ActionsPanel() {
     : undefined;
 
   // --- Buy Math Logging ---
-  console.log('[BUY SIM] tokenPrice:', tokenPrice, 'ethAmount:', ethAmount, 'slippage:', slippage);
-  console.log('[BUY SIM] expectedTokens:', expectedTokens);
+  // console.log('[BUY SIM] tokenPrice:', tokenPrice, 'ethAmount:', ethAmount, 'slippage:', slippage); // Commented to reduce console noise
+  // console.log('[BUY SIM] expectedTokens:', expectedTokens); // Commented to reduce console noise
   const minTokensOut = expectedTokens
     ? (expectedTokens * BigInt(Math.round(100 - slippage))) / 100n
     : undefined;
 
   // --- Buy Simulation Logging ---
-  console.log('[BUY SIM] minTokensOut:', minTokensOut, 'ethAmount:', ethAmount, 'enabled:', tab === 'buy' && !!minTokensOut);
+  // console.log('[BUY SIM] minTokensOut:', minTokensOut, 'ethAmount:', ethAmount, 'enabled:', tab === 'buy' && !!minTokensOut); // Commented to reduce console noise
   const {
     data: buySimData,
     isLoading: isBuySimLoading,
@@ -226,7 +226,7 @@ export default function ActionsPanel() {
     value: ethAmount ? parseEther(ethAmount) : undefined,
     query: { enabled: tab === 'buy' && !!minTokensOut },
   });
-  console.log('[BUY SIM] buySimData:', buySimData, 'buySimError:', buySimError);
+  // console.log('[BUY SIM] buySimData:', buySimData, 'buySimError:', buySimError); // Commented to reduce console noise
   const {
     writeContract: buyWriteContract,
     data: buyWriteData,
@@ -329,19 +329,19 @@ export default function ActionsPanel() {
   const handleBuy = () => {
     setTxState('loading');
     setTxError(null);
-    // Debug log for handleBuy
-    console.log('handleBuy called');
-    console.log('ETH value to send:', ethAmount);
-    console.log('minTokensOut:', minTokensOut);
-    console.log('buySimData:', buySimData);
-    console.log('buySimError:', buySimError);
+    // Debug log for handleBuy - Commented to reduce console noise
+    // console.log('handleBuy called');
+    // console.log('ETH value to send:', ethAmount);
+    // console.log('minTokensOut:', minTokensOut);
+    // console.log('buySimData:', buySimData);
+    // console.log('buySimError:', buySimError);
     if (!inputIsValid) {
-      console.log('[BUY] inputIsValid is false:', { ethAmount, minTokensOut });
+      console.log('[BUY] inputIsValid is false:', { ethAmount, minTokensOut }); // Keep this for debugging
     }
     if (buySimData?.request) {
       buyWriteContract(buySimData.request);
     } else {
-      console.log('handleBuy: No buySimData.request, cannot send transaction');
+      console.log('handleBuy: No buySimData.request, cannot send transaction'); // Keep this for debugging
     }
   };
   const handleSell = () => {

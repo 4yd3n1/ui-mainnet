@@ -1,43 +1,14 @@
 'use client';
-import { useContractRead } from 'wagmi';
-import { MEGA_CONTRACT_ADDRESS } from '@/contracts/mega';
-import MEGA_ABI from '@/contracts/MEGA_ABI.json';
+import { useGameData } from '@/contexts/GameDataContext';
 import LoadingSpinner from '@/components/common/LoadingSpinner';
-// import { usePlayerCap } from '@/hooks/usePlayerCap';
 
-const MARKETCAP_TARGET = 10_000_000; // $10M
-
-// const { playerCap, refetch } = usePlayerCap();
-// Placeholder values for playerCap and refetch
-const playerCap = 0;
-const refetch = () => {};
+const MARKETCAP_TARGET = 20_000; // $20k target
 
 export default function GameProgressCard() {
-  // Read the total market cap from the contract
-  const { data: marketCapRaw, isLoading } = useContractRead({
-    address: MEGA_CONTRACT_ADDRESS,
-    abi: MEGA_ABI,
-    functionName: 'getMarketCapUSD',
-  });
+  // Get consolidated game data from context
+  const { marketCapDisplay, marketCapProgress, isLoading } = useGameData();
 
-  // Convert from wei to USD (1e18)
-  const marketCapUSD = marketCapRaw ? Number(marketCapRaw) / 1e18 : 0;
-  const marketCapMillions = marketCapUSD / 1_000_000;
-  const progress = Math.min((marketCapUSD / MARKETCAP_TARGET) * 100, 100);
-  const progressDisplay = progress.toLocaleString(undefined, { maximumFractionDigits: 1 });
-
-  // Debug log for raw value
-  if (marketCapRaw !== undefined && marketCapRaw !== null) {
-    console.log("Raw market cap from contract:", marketCapRaw.toString());
-  }
-
-  // Display in dollars if less than $1M, otherwise in millions
-  let marketCapDisplay;
-  if (marketCapUSD < 1_000_000) {
-    marketCapDisplay = `$${marketCapUSD.toLocaleString(undefined, { maximumFractionDigits: 2 })}`;
-  } else {
-    marketCapDisplay = `$${marketCapMillions.toLocaleString(undefined, { maximumFractionDigits: 2 })}M`;
-  }
+  const progressDisplay = marketCapProgress?.toLocaleString(undefined, { maximumFractionDigits: 1 }) || '0';
 
   return (
     // Reduced padding, gap, and removed min-h
@@ -51,14 +22,14 @@ export default function GameProgressCard() {
         <span className="text-4xl font-extrabold text-white font-press">
           {isLoading ? <LoadingSpinner /> : marketCapDisplay}
         </span>
-        <span className="text-4xl font-extrabold text-white font-press"> / $10M</span>
+        <span className="text-4xl font-extrabold text-white font-press"> / $20k</span>
       </div>
       <div className="relative w-full mt-2">
         {/* Rocket emoji above the progress bar */}
         <div
           className="absolute"
           style={{
-            left: `calc(${progress}% - 16px)`,
+            left: `calc(${marketCapProgress || 0}% - 16px)`,
             top: '50%',
             transform: 'translateY(-50%)',
             transition: 'left 0.5s cubic-bezier(0.4,0,0.2,1)',
@@ -79,7 +50,7 @@ export default function GameProgressCard() {
           <div
             className="h-full rounded-full transition-all duration-500"
             style={{
-              width: `${progress}%`,
+              width: `${marketCapProgress || 0}%`,
               background: 'linear-gradient(90deg, #FFD700 0%, #FFA500 100%)',
               boxShadow: '0 0 12px 3px #FFD70088',
             }}
