@@ -64,7 +64,7 @@ export default function TimeRemainingCard() {
   if (gameEnded || timeRemaining === 0) {
     if (failed) {
       return (
-        <section className="p-8 rounded-xl shadow-card w-full max-w-full mx-auto flex flex-col gap-4 justify-center">
+        <section className="p-8 rounded-xl shadow-card w-full max-w-full mx-auto flex flex-col gap-4 justify-center items-center text-center">
           <h3 className="text-xl font-extrabold neon-text-yellow">
             Time Remaining
           </h3>
@@ -77,7 +77,7 @@ export default function TimeRemainingCard() {
     
     if (allDistributed) {
       return (
-        <section className="p-8 rounded-xl shadow-card w-full max-w-full mx-auto flex flex-col gap-4 justify-center">
+        <section className="p-8 rounded-xl shadow-card w-full max-w-full mx-auto flex flex-col gap-4 justify-center items-center text-center">
           <h3 className="text-xl font-extrabold neon-text-yellow">
             Game Complete
           </h3>
@@ -93,7 +93,7 @@ export default function TimeRemainingCard() {
     
     // Show distribution progress
     return (
-      <section className="p-8 rounded-xl shadow-card w-full max-w-full mx-auto flex flex-col gap-4 justify-center">
+      <section className="p-8 rounded-xl shadow-card w-full max-w-full mx-auto flex flex-col gap-4 justify-center items-center text-center">
         <h3 className="text-xl font-extrabold neon-text-yellow">
           Distribution Progress
         </h3>
@@ -120,13 +120,13 @@ export default function TimeRemainingCard() {
 
   // Active game display - original rich UI
   return (
-    <section className="p-8 rounded-xl shadow-card w-full max-w-full mx-auto flex flex-col gap-4 justify-center">
+    <section className="p-8 rounded-xl shadow-card w-full max-w-full mx-auto flex flex-col gap-4 justify-center items-center text-center">
       <h3 className="text-xl font-extrabold neon-text-yellow">
         Time Remaining
       </h3>
       
       {/* Timer */}
-      <div className="text-4xl font-bold text-yellow-400 font-mono">
+      <div className="text-4xl font-bold text-yellow-400">
         {formatTime(timeRemaining)}
       </div>
       
