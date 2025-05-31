@@ -1,7 +1,7 @@
 'use client';
 
 import React, { createContext, useContext, useMemo } from 'react';
-import { useContractReads, useAccount } from 'wagmi';
+import { useReadContracts, useAccount } from 'wagmi';
 import { MEGA_CONTRACT_ADDRESS } from '@/contracts/mega';
 import MEGA_ABI from '@/contracts/MEGA_ABI.json';
 
@@ -180,31 +180,31 @@ export function GameDataProvider({ children }: { children: React.ReactNode }) {
           address: MEGA_CONTRACT_ADDRESS as `0x${string}`,
           abi: MEGA_ABI,
           functionName: 'contributions',
-          arguments: [address],
+          args: [address],
         },
         {
           address: MEGA_CONTRACT_ADDRESS as `0x${string}`,
           abi: MEGA_ABI,
           functionName: 'lotteryTickets',
-          arguments: [address],
+          args: [address],
         },
         {
           address: MEGA_CONTRACT_ADDRESS as `0x${string}`,
           abi: MEGA_ABI,
           functionName: 'isQualified',
-          arguments: [address],
+          args: [address],
         },
         {
           address: MEGA_CONTRACT_ADDRESS as `0x${string}`,
           abi: MEGA_ABI,
           functionName: 'balanceOf',
-          arguments: [address],
+          args: [address],
         },
         {
           address: MEGA_CONTRACT_ADDRESS as `0x${string}`,
           abi: MEGA_ABI,
           functionName: 'lastFreeze',
-          arguments: [address],
+          args: [address],
         }
       );
     }
@@ -213,7 +213,7 @@ export function GameDataProvider({ children }: { children: React.ReactNode }) {
   }, [address]);
   
   // Batch all contract reads into a single RPC call
-  const { data, isLoading, isError } = useContractReads({
+  const { data, isLoading, isError } = useReadContracts({
     contracts: contractCalls,
     query: {
       refetchInterval: 10000, // Refetch every 10 seconds
