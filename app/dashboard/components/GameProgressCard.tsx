@@ -4,9 +4,14 @@ import LoadingSpinner from '@/components/common/LoadingSpinner';
 
 export default function GameProgressCard() {
   // Get consolidated game data from context
-  const { marketCapDisplay, marketCapProgress, isLoading } = useGameData();
+  const { marketCapDisplay, marketCapProgress, marketCapTarget, isLoading } = useGameData();
 
   const progressDisplay = marketCapProgress?.toLocaleString(undefined, { maximumFractionDigits: 1 }) || '0';
+  
+  // Format the target display
+  const targetDisplay = marketCapTarget ? 
+    `$${(Number(marketCapTarget) / 1e18).toLocaleString(undefined, { maximumFractionDigits: 0 })}` : 
+    '$100,000';
 
   return (
     // Reduced padding, gap, and removed min-h
@@ -20,7 +25,7 @@ export default function GameProgressCard() {
         <span className="text-4xl font-extrabold text-white font-press">
           {isLoading ? <LoadingSpinner /> : marketCapDisplay}
         </span>
-        <span className="text-4xl font-extrabold text-white font-press"> / $1M</span>
+        <span className="text-4xl font-extrabold text-white font-press"> / {targetDisplay}</span>
       </div>
       <div className="relative w-full mt-2">
         {/* Rocket emoji above the progress bar */}
