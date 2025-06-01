@@ -36,7 +36,7 @@ export default function GameStatsCard() {
 
   return (
     <DashboardCard>
-      <h3 className="text-lg md:text-lg font-bold flex items-center gap-2 neon-text-yellow mb-2">
+      <h3 className="text-lg md:text-lg font-bold flex items-center gap-2 text-white mb-2">
         <img src="/gamestats.png" alt="Game Stats" className="w-8 h-8 md:w-10 md:h-10" /> 
         <span className="truncate">Game Stats</span>
       </h3>
