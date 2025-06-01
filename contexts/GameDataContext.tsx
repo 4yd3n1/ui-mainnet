@@ -36,6 +36,8 @@ interface GameData {
   owner?: string;
   gameDuration?: bigint;
   marketCapTarget?: bigint;
+  qualifyThreshold?: bigint;
+  ticketsPerEth?: bigint;
   
   // VRF status
   randomWordRequested?: boolean;
@@ -185,6 +187,18 @@ export function GameDataProvider({ children }: { children: React.ReactNode }) {
         abi: MEGA_ABI,
         functionName: 'MARKETCAP_USD_CAP',
       },
+      // Get qualification threshold from contract
+      {
+        address: MEGA_CONTRACT_ADDRESS as `0x${string}`,
+        abi: MEGA_ABI,
+        functionName: 'QUALIFY_THRESHOLD',
+      },
+      // Get tickets per ETH from contract
+      {
+        address: MEGA_CONTRACT_ADDRESS as `0x${string}`,
+        abi: MEGA_ABI,
+        functionName: 'TICKETS_PER_ETH',
+      },
       // VRF status
       {
         address: MEGA_CONTRACT_ADDRESS as `0x${string}`,
@@ -294,6 +308,8 @@ export function GameDataProvider({ children }: { children: React.ReactNode }) {
       owner,
       gameDuration,
       marketCapTarget,
+      qualifyThreshold,
+      ticketsPerEth,
       randomWordRequested,
       randomWordReceived,
       ...userData
@@ -359,6 +375,8 @@ export function GameDataProvider({ children }: { children: React.ReactNode }) {
       owner: owner?.result as string | undefined,
       gameDuration: gameDuration?.result as bigint | undefined,
       marketCapTarget: marketCapTarget?.result as bigint | undefined,
+      qualifyThreshold: qualifyThreshold?.result as bigint | undefined,
+      ticketsPerEth: ticketsPerEth?.result as bigint | undefined,
       
       // VRF status
       randomWordRequested: randomWordRequested?.result as boolean | undefined,

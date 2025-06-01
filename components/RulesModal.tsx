@@ -1,4 +1,6 @@
-import { useState } from 'react';
+'use client';
+import React, { useState } from 'react';
+import { useGameData } from '@/contexts/GameDataContext';
 
 interface RulesModalProps {
   isOpen: boolean;
@@ -7,8 +9,14 @@ interface RulesModalProps {
 
 export default function RulesModal({ isOpen, onClose }: RulesModalProps) {
   const [imageModalOpen, setImageModalOpen] = useState(false);
+  const { qualifyThreshold } = useGameData();
 
   if (!isOpen) return null;
+
+  // Format qualification threshold
+  const qualifyThresholdDisplay = qualifyThreshold ? 
+    (Number(qualifyThreshold) / 1e18).toString() : 
+    '0.1';
 
   return (
     <>
@@ -35,7 +43,7 @@ export default function RulesModal({ isOpen, onClose }: RulesModalProps) {
                 Enter the ultimate high-stakes crypto race! Every ETH you spend buying MEGA tokens earns you lottery tickets for a shot at life-changing prizes. Buy to compete, sell to cash out, or freeze the market to disrupt your rivals and gain the upper hand.
               </p>
               <p className="text-xl text-yellow-400 font-semibold">
-                👉 Spend just 0.1 ETH to qualify for the prize pool!
+                👉 Spend just {qualifyThresholdDisplay} ETH to qualify for the prize pool!
               </p>
             </section>
 
@@ -60,7 +68,7 @@ export default function RulesModal({ isOpen, onClose }: RulesModalProps) {
                   <p><strong>Lottery Tickets:</strong></p>
                   <ul className="ml-4 space-y-1">
                     <li>• Earn 10 tickets per 1 ETH spent</li>
-                    <li>• Minimum entry: 0.1 ETH</li>
+                    <li>• Minimum entry: {qualifyThresholdDisplay} ETH</li>
                   </ul>
                 </div>
               </div>
@@ -79,7 +87,7 @@ export default function RulesModal({ isOpen, onClose }: RulesModalProps) {
             <section className="bg-[#1a2333] rounded-lg p-6">
               <h3 className="text-xl font-bold text-yellow-400 mb-4 text-center">🔒 Anti-Jeet Mechanism</h3>
               <p className="text-gray-300 mb-3">
-                Worried about sudden dumps? Qualified players can pay 0.1 ETH to freeze all sales for 1 hour — giving you time to stack more tokens at stable prices.
+                Worried about sudden dumps? Qualified players can pay {qualifyThresholdDisplay} ETH to freeze all sales for 1 hour — giving you time to stack more tokens at stable prices.
               </p>
               <p className="text-red-400 font-semibold">
                 ⚠️ You can only use this once every 24 hours — use it strategically!
