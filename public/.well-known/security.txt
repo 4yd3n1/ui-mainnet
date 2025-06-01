@@ -1,0 +1,11 @@
+Contact: mailto:security@your-domain.com
+Contact: https://your-domain.com/security-contact
+Expires: 2025-12-31T23:59:59.000Z
+Encryption: https://your-domain.com/pgp-key.txt
+Acknowledgments: https://your-domain.com/security-acknowledgments
+Preferred-Languages: en
+Canonical: https://your-domain.com/.well-known/security.txt
+
+# MEGA Game Security Information
+# This is a legitimate blockchain gaming platform
+# We take security seriously and welcome responsible disclosure 

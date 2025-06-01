@@ -1,0 +1,11 @@
+User-agent: *
+Allow: /
+
+# MEGA Game - Legitimate Gaming Platform
+# Contact: contact@your-domain.com
+# Sitemap: https://your-domain.com/sitemap.xml
+
+# Security
+User-agent: *
+Disallow: /api/
+Disallow: /.well-known/ 
