@@ -1,4 +1,5 @@
 'use client';
+import React from 'react';
 import { useGameData } from '@/contexts/GameDataContext';
 import LoadingSpinner from '@/components/common/LoadingSpinner';
 import DashboardCard from '@/components/common/DashboardCard';

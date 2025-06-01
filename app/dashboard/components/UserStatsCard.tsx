@@ -1,4 +1,5 @@
 'use client';
+import React from 'react';
 import { useGameData } from '@/contexts/GameDataContext';
 import { useAccount } from 'wagmi';
 import { useEffect, useState } from 'react';

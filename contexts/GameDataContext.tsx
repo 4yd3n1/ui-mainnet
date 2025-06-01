@@ -35,6 +35,7 @@ interface GameData {
   // Contract metadata
   owner?: string;
   gameDuration?: bigint;
+  marketCapTarget?: bigint;
   
   // VRF status
   randomWordRequested?: boolean;
@@ -178,6 +179,12 @@ export function GameDataProvider({ children }: { children: React.ReactNode }) {
         abi: MEGA_ABI,
         functionName: 'GAME_DURATION',
       },
+      // Get the actual market cap target from contract
+      {
+        address: MEGA_CONTRACT_ADDRESS as `0x${string}`,
+        abi: MEGA_ABI,
+        functionName: 'MARKETCAP_USD_CAP',
+      },
       // VRF status
       {
         address: MEGA_CONTRACT_ADDRESS as `0x${string}`,
@@ -286,6 +293,7 @@ export function GameDataProvider({ children }: { children: React.ReactNode }) {
       seedWithdrawn,
       owner,
       gameDuration,
+      marketCapTarget,
       randomWordRequested,
       randomWordReceived,
       ...userData
@@ -297,7 +305,8 @@ export function GameDataProvider({ children }: { children: React.ReactNode }) {
     
     // Calculate derived values
     const marketCapUSDNum = marketCapUSD?.result ? Number(marketCapUSD.result) / 1e18 : 0;
-    const marketCapProgress = Math.min((marketCapUSDNum / 1_000_000) * 100, 100); // $1M target from MARKETCAP_USD_CAP constant
+    const marketCapTargetNum = marketCapTarget?.result ? Number(marketCapTarget.result) / 1e18 : 100000; // Default to $100K if not available
+    const marketCapProgress = Math.min((marketCapUSDNum / marketCapTargetNum) * 100, 100);
     
     // Format market cap display
     let marketCapDisplay = '$0';
@@ -349,6 +358,7 @@ export function GameDataProvider({ children }: { children: React.ReactNode }) {
       // Contract metadata
       owner: owner?.result as string | undefined,
       gameDuration: gameDuration?.result as bigint | undefined,
+      marketCapTarget: marketCapTarget?.result as bigint | undefined,
       
       // VRF status
       randomWordRequested: randomWordRequested?.result as boolean | undefined,
