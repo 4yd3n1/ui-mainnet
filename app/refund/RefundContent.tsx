@@ -1,10 +1,9 @@
 'use client';
 import React, { useState, useEffect } from 'react';
-import { useAccount, useWriteContract, useReadContract, useWaitForTransactionReceipt } from 'wagmi';
+import { useAccount, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { useGameData } from '@/contexts/GameDataContext';
 import { MEGA_CONTRACT_ADDRESS } from '@/contracts/mega';
 import MEGA_ABI from '@/contracts/MEGA_ABI.json';
-import { ethers } from 'ethers';
 import LoadingSpinner from '@/components/common/LoadingSpinner';
 import { parseEther } from 'viem';
 
