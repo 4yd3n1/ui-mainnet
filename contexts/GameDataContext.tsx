@@ -297,7 +297,7 @@ export function GameDataProvider({ children }: { children: React.ReactNode }) {
     
     // Calculate derived values
     const marketCapUSDNum = marketCapUSD?.result ? Number(marketCapUSD.result) / 1e18 : 0;
-    const marketCapProgress = Math.min((marketCapUSDNum / 20_000) * 100, 100); // $20k target
+    const marketCapProgress = Math.min((marketCapUSDNum / 1_000_000) * 100, 100); // $1M target from MARKETCAP_USD_CAP constant
     
     // Format market cap display
     let marketCapDisplay = '$0';
@@ -312,7 +312,8 @@ export function GameDataProvider({ children }: { children: React.ReactNode }) {
     // Calculate time remaining
     const now = Math.floor(Date.now() / 1000);
     const gameStart = gameStartTime?.result ? Number(gameStartTime.result) : 0;
-    const gameEndTime = gameStart + 3600; // 1 hour game duration
+    const gameDurationSeconds = gameDuration?.result ? Number(gameDuration.result) : 1800; // Default to 30 minutes if not available
+    const gameEndTime = gameStart + gameDurationSeconds;
     const timeRemaining = Math.max(0, gameEndTime - now);
     
     // Check if frozen

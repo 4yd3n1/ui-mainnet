@@ -9,13 +9,7 @@ export default function ContractStateChecker() {
   
   // Get consolidated game data from context
   const { 
-    gameEnded,
-    grandPrizeDistributed,
-    runnerUpsDistributed,
-    earlyBirdsDistributed,
-    lastGrandWinner,
-    marketCapUSD,
-    ethReserve 
+    gameEnded
   } = useGameData();
 
   // Check contract balance when game ends (for monitoring purposes)
@@ -23,11 +17,11 @@ export default function ContractStateChecker() {
     const checkBalance = async () => {
       if (publicClient) {
         try {
-          const balance = await publicClient.getBalance({
+          await publicClient.getBalance({
             address: MEGA_CONTRACT_ADDRESS as `0x${string}`,
           });
           // Balance check complete - could be used for internal state tracking if needed
-        } catch (error) {
+        } catch {
           // Handle balance check error silently
         }
       }

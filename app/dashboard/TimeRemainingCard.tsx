@@ -14,7 +14,6 @@ export default function TimeRemainingCard() {
     runnerUpsDistributed,
     earlyBirdsDistributed,
     ownerPaid,
-    owner,
     isLoading 
   } = useGameData();
   
@@ -43,7 +42,6 @@ export default function TimeRemainingCard() {
   const runnerDone = runnerUpsDistributed || false;
   const earlyDone = earlyBirdsDistributed || false;
   const ownerDone = ownerPaid || false;
-  const ownerAddress = owner || '';
 
   const getPrizeStatus = () => {
     if (failed) return "🛑 Game Failed";

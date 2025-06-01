@@ -2,8 +2,6 @@
 import { useGameData } from '@/contexts/GameDataContext';
 import LoadingSpinner from '@/components/common/LoadingSpinner';
 
-const MARKETCAP_TARGET = 20_000; // $20k target
-
 export default function GameProgressCard() {
   // Get consolidated game data from context
   const { marketCapDisplay, marketCapProgress, isLoading } = useGameData();
@@ -22,7 +20,7 @@ export default function GameProgressCard() {
         <span className="text-4xl font-extrabold text-white font-press">
           {isLoading ? <LoadingSpinner /> : marketCapDisplay}
         </span>
-        <span className="text-4xl font-extrabold text-white font-press"> / $20k</span>
+        <span className="text-4xl font-extrabold text-white font-press"> / $1M</span>
       </div>
       <div className="relative w-full mt-2">
         {/* Rocket emoji above the progress bar */}

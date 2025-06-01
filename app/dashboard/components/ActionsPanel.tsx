@@ -1,13 +1,12 @@
 'use client';
-import { useState, useEffect, useMemo } from 'react';
-import { useAccount, useBalance, useContractWrite, useSimulateContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
+import React, { useState, useEffect, useMemo } from 'react';
+import { useAccount, useBalance, useSimulateContract, useWriteContract, useWaitForTransactionReceipt } from 'wagmi';
 import { useGameData } from '@/contexts/GameDataContext';
 import { MEGA_CONTRACT_ADDRESS } from '@/contracts/mega';
 import MEGA_ABI from '@/contracts/MEGA_ABI.json';
 import LoadingSpinner from '@/components/common/LoadingSpinner';
 import DashboardCard from '@/components/common/DashboardCard';
 import { parseUnits, formatUnits, parseEther } from 'viem';
-import Link from 'next/link';
 
 const SLIPPAGE_OPTIONS = [2, 5, 10];
 
@@ -43,11 +42,9 @@ export default function ActionsPanel() {
   // Transaction state
   const [txState, setTxState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
   const [txError, setTxError] = useState<string | null>(null);
-  const [txHash, setTxHash] = useState<string | null>(null);
 
   // Freeze-specific state
   const [freezeState, setFreezeState] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
-  const [freezeMsg, setFreezeMsg] = useState<string | null>(null);
 
   // Timer for live countdown - prevent hydration mismatch
   const [now, setNow] = useState(0); // Start with 0 to prevent hydration mismatch
@@ -81,7 +78,7 @@ export default function ActionsPanel() {
       const minTokensOut = (expectedTokens * BigInt(Math.round(100 - slippage))) / 100n;
       
       return { expectedTokens, minTokensOut };
-    } catch (error) {
+    } catch {
       return { expectedTokens: undefined, minTokensOut: undefined };
     }
   }, [tokenPrice, ethAmount, slippage]);
@@ -99,7 +96,7 @@ export default function ActionsPanel() {
       const minEthOut = parseEther((ethOut * (1 - slippage / 100)).toFixed(8));
       
       return { sellAmtWei, minEthOut };
-    } catch (error) {
+    } catch {
       return { sellAmtWei: undefined, minEthOut: undefined };
     }
   }, [megaAmount, tokenPrice, slippage]);
@@ -122,8 +119,6 @@ export default function ActionsPanel() {
     writeContract: freezeWriteContract,
     data: freezeWriteData,
     isPending: isFreezePending,
-    isError: isFreezeError,
-    error: freezeError,
   } = useWriteContract();
 
   const {
@@ -216,13 +211,11 @@ export default function ActionsPanel() {
   };
 
   // --- Buy Logic ---
-  const { expectedTokens, minTokensOut } = buyCalculations;
+  const { minTokensOut } = buyCalculations;
 
   const {
     data: buySimData,
     isLoading: isBuySimLoading,
-    isError: isBuySimError,
-    error: buySimError,
   } = useSimulateContract({
     address: CONTRACT_ADDRESS,
     abi: MEGA_ABI,
@@ -243,8 +236,6 @@ export default function ActionsPanel() {
     writeContract: buyWriteContract,
     data: buyWriteData,
     isPending: isBuyPending,
-    isError: isBuyError,
-    error: buyError,
   } = useWriteContract();
   const {
     isLoading: isBuyTxLoading,
@@ -271,8 +262,6 @@ export default function ActionsPanel() {
   const {
     data: sellSimData,
     isLoading: isSellSimLoading,
-    isError: isSellSimError,
-    error: sellSimError,
   } = useSimulateContract({
     address: CONTRACT_ADDRESS,
     abi: MEGA_ABI,
@@ -292,8 +281,6 @@ export default function ActionsPanel() {
     writeContract: sellWriteContract,
     data: sellWriteData,
     isPending: isSellPending,
-    isError: isSellError,
-    error: sellError,
   } = useWriteContract();
   const {
     isLoading: isSellTxLoading,
@@ -342,12 +329,10 @@ export default function ActionsPanel() {
   const handleFreeze = () => {
     if (isFrozen || gameEnded) return;
     setFreezeState('loading');
-    setFreezeMsg(null);
     if (freezeSimData?.request) {
       freezeWriteContract({ ...freezeSimData.request, value: parseEther('0.1') });
     } else {
       setFreezeState('error');
-      setFreezeMsg('Unable to prepare freeze transaction. Please try again or check your wallet connection.');
     }
   };
 
@@ -356,7 +341,6 @@ export default function ActionsPanel() {
       setFreezeState('success');
     } else if (isFreezeTxError && freezeTxError) {
       setFreezeState('error');
-      setFreezeMsg((freezeTxError as Error).message);
     }
   }, [isFreezeTxSuccess, isFreezeTxError, freezeTxError]);
 
@@ -526,7 +510,7 @@ export default function ActionsPanel() {
           ) : freezeLabel}
         </button>
         {/* Do not show the generic freezeMsg error, only show contract revert reasons below */}
-        {!isFrozen && isFreezeSimError && freezeSimError && !gameEnded && (
+        {!isFrozen && isFreezeSimError && !gameEnded && (
           <div className="text-red-500 text-sm md:text-sm mt-1">
             {freezeSimError.message.includes('Game not active') 
               ? 'Game has ended - freezing is no longer available'

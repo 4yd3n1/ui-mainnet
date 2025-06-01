@@ -36,7 +36,7 @@ export default function GameStatsCard() {
 
   return (
     <DashboardCard>
-      <h3 className="text-lg md:text-lg font-bold flex items-center gap-2 text-white mb-2">
+      <h3 className="text-lg md:text-lg font-bold flex items-center gap-2 neon-text-yellow mb-2">
         <img src="/gamestats.png" alt="Game Stats" className="w-8 h-8 md:w-10 md:h-10" /> 
         <span className="truncate">Game Stats</span>
       </h3>
@@ -87,7 +87,7 @@ export default function GameStatsCard() {
           </div>
         </div>
         <div className="bg-bg-card-alt rounded-lg p-4 md:p-4 flex flex-col gap-2 md:gap-2">
-          <span className="text-sm md:text-sm font-bold text-white mb-2 truncate">Total Contract Balance</span>
+          <span className="text-sm md:text-sm font-bold text-white mb-2 truncate">Current ETH Reserve</span>
           <span className="font-bold neon-text-yellow text-sm md:text-base break-words">
             {isLoading ? <LoadingSpinner /> : 
               (ethReserve ? (Number(ethReserve) / 1e18).toLocaleString(undefined, { maximumFractionDigits: 4 }) : 0)} ETH

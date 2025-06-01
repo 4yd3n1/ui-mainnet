@@ -28,15 +28,17 @@
 ### 1. **Update Game Parameters** (contracts/MEGA.sol)
 ```solidity
 // Current Live Contract (matches deployed version):
-uint256 public constant SEED_ETH = 0.1 ether;
-uint256 public constant MARKETCAP_USD_CAP = 20_000 * 1e18;  // $20k
-uint256 public constant GAME_DURATION = 1 hours;
-uint256 public constant INITIAL_TOKENS = 1_000 * 1e18;  // 1K tokens
+uint256 public constant SEED_ETH = 6 ether;
+uint256 public constant MARKETCAP_USD_CAP = 1_000_000 * 1e18;  // $1M
+uint256 public constant GAME_DURATION = 30 minutes;
+uint256 public constant INITIAL_TOKENS = 100_000_000 * 1e18;  // 100M tokens
 uint256 public constant QUALIFY_THRESHOLD = 0.1 ether;
 
 // Production (Alternative - higher stakes):
-// uint256 public constant SEED_ETH = 6 ether;  // Optional higher amount
-// uint256 public constant MARKETCAP_USD_CAP = 500_000 * 1e18;  // Optional higher target
+uint256 public constant SEED_ETH = 6 ether;                   // 6 ETH seed
+uint256 public constant MARKETCAP_USD_CAP = 1_000_000 * 1e18; // $1M market cap
+uint256 public constant GAME_DURATION = 30 minutes;           // 30 minutes max
+uint256 public constant QUALIFY_THRESHOLD = 0.1 ether;        // 0.1 ETH min
 ```
 
 ### 2. **Update Chainlink VRF Configuration**

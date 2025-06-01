@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState, useRef } from 'react';
+import { useEffect, useState, useRef, useCallback } from 'react';
 import { useAccount, usePublicClient, useContractRead } from 'wagmi';
 import { MEGA_ABI, MEGA_CONTRACT_ADDRESS } from '@/contracts/mega';
 
@@ -138,7 +138,7 @@ export function useWinnerCheck() {
   };
 
   // Debounced winner check function
-  const debouncedWinnerCheck = () => {
+  const debouncedWinnerCheck = useCallback(() => {
     if (timeoutRef.current) {
       clearTimeout(timeoutRef.current);
     }
@@ -146,13 +146,13 @@ export function useWinnerCheck() {
     timeoutRef.current = setTimeout(() => {
       checkWinnerFromContractState();
     }, 1000); // 1 second debounce
-  };
+  }, []);
 
   const checkWinnerFromContractState = async () => {
     if (!address || !publicClient || checkingWinners) return;
     
     setCheckingWinners(true);
-    let cancelled = false;
+    const cancelled = false;
 
     try {
       // Type check for address
@@ -250,7 +250,7 @@ export function useWinnerCheck() {
         clearTimeout(timeoutRef.current);
       }
     };
-  }, [address, publicClient, grandPrizeDistributed, runnerUpsDistributed, earlyBirdsDistributed, lastGrandWinner, finalPool]);
+  }, [address, publicClient, grandPrizeDistributed, runnerUpsDistributed, earlyBirdsDistributed, lastGrandWinner, finalPool, anyDistributionHappened]);
 
   // Cleanup timeout on unmount
   useEffect(() => {

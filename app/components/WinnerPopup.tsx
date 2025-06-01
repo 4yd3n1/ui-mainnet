@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useState } from 'react';
+import { useEffect } from 'react';
 import { formatEther } from 'viem';
 import confetti from 'canvas-confetti';
 
@@ -11,8 +11,6 @@ interface WinnerPopupProps {
 }
 
 export default function WinnerPopup({ isOpen, onClose, category, amount }: WinnerPopupProps) {
-  const [showConfetti, setShowConfetti] = useState(false);
-
   useEffect(() => {
     if (isOpen) {
       // Trigger confetti
@@ -28,7 +26,6 @@ export default function WinnerPopup({ isOpen, onClose, category, amount }: Winne
 
         if (timeLeft <= 0) {
           clearInterval(interval);
-          setShowConfetti(false);
           return;
         }
 
@@ -51,8 +48,6 @@ export default function WinnerPopup({ isOpen, onClose, category, amount }: Winne
           origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 }
         });
       }, 250);
-
-      setShowConfetti(true);
     }
   }, [isOpen]);
 
