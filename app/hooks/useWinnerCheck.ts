@@ -84,7 +84,8 @@ export const manualContractTest = async (publicClient: PublicClient, address: st
       
       if (isEarlyBird) {
         const totalShare = finalPool && typeof finalPool === 'bigint' ? (finalPool * 15n) / 100n : 0n;
-        const _amount = earlyBirds.length > 0 ? totalShare / BigInt(earlyBirds.length) : 0n;
+        // Calculate amount but don't store in unused variable
+        earlyBirds.length > 0 ? totalShare / BigInt(earlyBirds.length) : 0n;
       }
     }
     
@@ -95,7 +96,7 @@ export const manualContractTest = async (publicClient: PublicClient, address: st
       finalPool
     };
     
-  } catch (_error) {
+  } catch {
     return null;
   }
 };
@@ -197,7 +198,7 @@ export function useWinnerCheck() {
           finalPool: fallbackResult.finalPool as bigint,
         });
       }
-    } catch (_error) {
+    } catch {
       // Silently handle fallback errors
     }
   }, [publicClient, address]);
@@ -218,18 +219,6 @@ export function useWinnerCheck() {
       }
     }
   }, [address, publicClient, grandPrizeDistributed, runnerUpsDistributed, earlyBirdsDistributed, tryFallbackRead]);
-
-  // Manual refresh function
-  const _manualRefresh = useCallback(async () => {
-    fallbackTriggered.current = false;
-    setFallbackData(null);
-    cacheRef.current = { runnerUps: null, earlyBirds: null, lastFetch: 0 }; // Clear cache
-    await Promise.all([
-      refetchGrandPrize(),
-      refetchRunnerUps(),
-      refetchEarlyBirds()
-    ]);
-  }, [refetchGrandPrize, refetchRunnerUps, refetchEarlyBirds]);
 
   // Function to get runner-ups array with aggressive caching
   const getRunnerUps = useCallback(async () => {
@@ -270,7 +259,7 @@ export function useWinnerCheck() {
       cacheRef.current.lastFetch = now;
       
       return runnerUps;
-    } catch (_error) {
+    } catch {
       return cacheRef.current.runnerUps || [];
     }
   }, [publicClient]);
@@ -316,7 +305,7 @@ export function useWinnerCheck() {
       }
       
       return earlyBirds;
-    } catch (_error) {
+    } catch {
       return cacheRef.current.earlyBirds || [];
     }
   }, [publicClient]);
@@ -384,7 +373,7 @@ export function useWinnerCheck() {
               highestPrizeCategory = 'runnerUp';
             }
           }
-        } catch (_error) {
+        } catch {
           // Silently handle errors
         }
       }
@@ -409,7 +398,7 @@ export function useWinnerCheck() {
               highestPrizeCategory = 'earlyBird';
             }
           }
-        } catch (_error) {
+        } catch {
           // Silently handle errors
         }
       }
@@ -435,7 +424,7 @@ export function useWinnerCheck() {
         setWinnerInfo(null);
         setShowPopup(false);
       }
-    } catch (_error) {
+    } catch {
       // Silently handle errors
       setWinnerInfo(null);
       setShowPopup(false);
