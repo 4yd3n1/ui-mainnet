@@ -26,6 +26,101 @@
     "type": "constructor"
   },
   {
+    "inputs": [],
+    "name": "AlreadyDistributed",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "AlreadyEnded",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "AlreadyFulfilled",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "AmountZero",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "CapNotReached",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "CooldownActive",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "FreezeFeeFailed",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "FreezePaymentRequired",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "GameFailed",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "GameNotActive",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "GameNotEnded",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InsufficientBalance",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidPrice",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "InvalidSeedAmount",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "MarketAlreadyFrozen",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "MarketFrozen",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "MaxEthPerAddress",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "NoTickets",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "NotQualified",
+    "type": "error"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -60,6 +155,86 @@
       }
     ],
     "name": "OnlyOwnerOrCoordinator",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "PoolNotSnapshotted",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "PrizeTooSmall",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "RandomWordAlreadyReceived",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "RandomWordNotReceived",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "RefundExhausted",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "RefundModeActive",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "RefundsNotEnabled",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "RequestNotFound",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "SeedAlreadyWithdrawn",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "SendEthToBuy",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "SlippageExceeded",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "SpecifyTokens",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "TooEarlyForRefunds",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "TooEarlyToEnd",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "TooEarlyToRetry",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "TransferFailed",
     "type": "error"
   },
   {
