@@ -83,8 +83,8 @@ export const manualContractTest = async (publicClient: PublicClient, address: st
       );
       
       if (isEarlyBird) {
-        const totalShare = finalPool && typeof finalPool === 'bigint' ? (finalPool * 15n) / 100n : 0n;
         // Early bird amount calculation would go here if needed
+        // const totalShare = finalPool && typeof finalPool === 'bigint' ? (finalPool * 15n) / 100n : 0n;
       }
     }
     
