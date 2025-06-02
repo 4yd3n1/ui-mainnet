@@ -151,6 +151,7 @@ export function useWinnerCheck() {
   const checkWinnerFromContractState = async () => {
     if (!address || !publicClient || checkingWinners) return;
     
+    console.log('🔍 WinnerCheck: Starting check for', address);
     setCheckingWinners(true);
     const cancelled = false;
 
@@ -159,12 +160,15 @@ export function useWinnerCheck() {
       if (!address || typeof address !== 'string') return;
       
       const addrLower = address.toLowerCase();
+      console.log('🔍 WinnerCheck: Checking address', addrLower);
 
       // Check Grand Prize Winner
       if (grandPrizeDistributed && lastGrandWinner && typeof lastGrandWinner === 'string') {
+        console.log('🔍 WinnerCheck: Checking grand prize winner', lastGrandWinner.toLowerCase());
         if (lastGrandWinner.toLowerCase() === addrLower) {
           // Grand prize is 25% of final pool
           const amount = finalPool && typeof finalPool === 'bigint' ? (finalPool * 25n) / 100n : 0n;
+          console.log('🎉 WinnerCheck: GRAND PRIZE WINNER DETECTED!', amount);
           if (!cancelled) {
             setWinnerInfo({ category: 'grand', amount });
             setShowPopup(true);
@@ -175,7 +179,9 @@ export function useWinnerCheck() {
 
       // Check Runner-ups
       if (runnerUpsDistributed) {
+        console.log('🔍 WinnerCheck: Checking runner-ups...');
         const runnerUps = await getRunnerUps();
+        console.log('🔍 WinnerCheck: Found', runnerUps.length, 'runner-ups');
         const isRunnerUp = runnerUps.some(winner => 
           winner.toLowerCase() === addrLower
         );
@@ -184,6 +190,7 @@ export function useWinnerCheck() {
           // Runner-ups share 20% of final pool
           const totalShare = finalPool && typeof finalPool === 'bigint' ? (finalPool * 20n) / 100n : 0n;
           const amount = runnerUps.length > 0 ? totalShare / BigInt(runnerUps.length) : 0n;
+          console.log('🎉 WinnerCheck: RUNNER-UP WINNER DETECTED!', amount);
           if (!cancelled) {
             setWinnerInfo({ category: 'runnerUp', amount });
             setShowPopup(true);
@@ -194,15 +201,21 @@ export function useWinnerCheck() {
 
       // Check Early Birds
       if (earlyBirdsDistributed) {
+        console.log('🔍 WinnerCheck: Checking early birds...');
         const earlyBirds = await getEarlyBirds();
+        console.log('🔍 WinnerCheck: Found', earlyBirds.length, 'early birds');
+        console.log('🔍 WinnerCheck: Early birds list:', earlyBirds);
         const isEarlyBird = earlyBirds.some(winner => 
           winner.toLowerCase() === addrLower
         );
+        
+        console.log('🔍 WinnerCheck: Is early bird?', isEarlyBird);
         
         if (isEarlyBird) {
           // Early birds share 15% of final pool
           const totalShare = finalPool && typeof finalPool === 'bigint' ? (finalPool * 15n) / 100n : 0n;
           const amount = earlyBirds.length > 0 ? totalShare / BigInt(earlyBirds.length) : 0n;
+          console.log('🎉 WinnerCheck: EARLY BIRD WINNER DETECTED!', amount);
           if (!cancelled) {
             setWinnerInfo({ category: 'earlyBird', amount });
             setShowPopup(true);
@@ -212,12 +225,13 @@ export function useWinnerCheck() {
       }
 
       // Not a winner
+      console.log('🔍 WinnerCheck: No winner detected');
       if (!cancelled) {
         setWinnerInfo(null);
         setShowPopup(false);
       }
     } catch (error) {
-      console.error('Error checking winner status:', error);
+      console.error('❌ WinnerCheck: Error checking winner status:', error);
       // Fail silently - don't show popup if there's an error
       if (!cancelled) {
         setWinnerInfo(null);
@@ -229,7 +243,16 @@ export function useWinnerCheck() {
   };
 
   useEffect(() => {
+    console.log('🔄 WinnerCheck: useEffect triggered');
+    console.log('  - address:', address);
+    console.log('  - publicClient:', !!publicClient);
+    console.log('  - grandPrizeDistributed:', grandPrizeDistributed);
+    console.log('  - runnerUpsDistributed:', runnerUpsDistributed);
+    console.log('  - earlyBirdsDistributed:', earlyBirdsDistributed);
+    console.log('  - anyDistributionHappened:', anyDistributionHappened);
+    
     if (!address || !publicClient) {
+      console.log('🔄 WinnerCheck: No address or publicClient, resetting state');
       setWinnerInfo(null);
       setShowPopup(false);
       return;
@@ -237,9 +260,11 @@ export function useWinnerCheck() {
 
     // Only check if any distributions have happened
     if (anyDistributionHappened) {
+      console.log('🔄 WinnerCheck: Distributions detected, starting check...');
       debouncedWinnerCheck();
     } else {
       // No distributions yet, set default state
+      console.log('🔄 WinnerCheck: No distributions yet, resetting state');
       setWinnerInfo(null);
       setShowPopup(false);
     }
