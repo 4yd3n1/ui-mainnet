@@ -84,8 +84,7 @@ export const manualContractTest = async (publicClient: PublicClient, address: st
       
       if (isEarlyBird) {
         const totalShare = finalPool && typeof finalPool === 'bigint' ? (finalPool * 15n) / 100n : 0n;
-        // Calculate amount but don't store in unused variable
-        earlyBirds.length > 0 ? totalShare / BigInt(earlyBirds.length) : 0n;
+        // Early bird amount calculation would go here if needed
       }
     }
     
@@ -124,7 +123,7 @@ export function useWinnerCheck() {
   });
 
   // Read contract state for distribution flags with much longer intervals to reduce spam
-  const { data: grandPrizeDistributed, refetch: refetchGrandPrize } = useContractRead({
+  const { data: grandPrizeDistributed } = useContractRead({
     address: MEGA_CONTRACT_ADDRESS,
     abi: MEGA_ABI,
     functionName: 'grandPrizeDistributed',
@@ -135,7 +134,7 @@ export function useWinnerCheck() {
     },
   });
 
-  const { data: runnerUpsDistributed, refetch: refetchRunnerUps } = useContractRead({
+  const { data: runnerUpsDistributed } = useContractRead({
     address: MEGA_CONTRACT_ADDRESS,
     abi: MEGA_ABI,
     functionName: 'runnerUpsDistributed',
@@ -146,7 +145,7 @@ export function useWinnerCheck() {
     },
   });
 
-  const { data: earlyBirdsDistributed, refetch: refetchEarlyBirds } = useContractRead({
+  const { data: earlyBirdsDistributed } = useContractRead({
     address: MEGA_CONTRACT_ADDRESS,
     abi: MEGA_ABI,
     functionName: 'earlyBirdsDistributed',
