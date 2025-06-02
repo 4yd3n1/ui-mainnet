@@ -14,6 +14,7 @@ export default function WinnerPopupClient() {
       onClose={() => setShowPopup(false)}
       category={winnerInfo.category}
       amount={winnerInfo.amount}
+      details={winnerInfo.details}
     />
   );
 } 
