@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef, useCallback } from 'react';
 import { useAccount, usePublicClient, useContractRead } from 'wagmi';
 import { MEGA_ABI, MEGA_CONTRACT_ADDRESS } from '@/contracts/mega';
+import type { PublicClient } from 'viem';
 
 interface WinnerInfo {
   category: 'grand' | 'runnerUp' | 'earlyBird';
@@ -18,8 +19,15 @@ interface WinnerInfo {
   };
 }
 
+interface FallbackData {
+  grandPrizeDistributed?: boolean;
+  runnerUpsDistributed?: boolean;
+  earlyBirdsDistributed?: boolean;
+  finalPool?: bigint;
+}
+
 // Manual test function for debugging
-export const manualContractTest = async (publicClient: any, address: string) => {
+export const manualContractTest = async (publicClient: PublicClient, address: string) => {
   try {
     // Read distribution flags directly with fresh queries
     const grandPrizeDistributed = await publicClient.readContract({
@@ -75,8 +83,8 @@ export const manualContractTest = async (publicClient: any, address: string) => 
       );
       
       if (isEarlyBird) {
-        const totalShare = finalPool ? (finalPool * 15n) / 100n : 0n;
-        const amount = earlyBirds.length > 0 ? totalShare / BigInt(earlyBirds.length) : 0n;
+        const totalShare = finalPool && typeof finalPool === 'bigint' ? (finalPool * 15n) / 100n : 0n;
+        const _amount = earlyBirds.length > 0 ? totalShare / BigInt(earlyBirds.length) : 0n;
       }
     }
     
@@ -87,7 +95,7 @@ export const manualContractTest = async (publicClient: any, address: string) => 
       finalPool
     };
     
-  } catch (error) {
+  } catch (_error) {
     return null;
   }
 };
@@ -98,7 +106,7 @@ export function useWinnerCheck() {
   const [showPopup, setShowPopup] = useState(false);
   const [winnerInfo, setWinnerInfo] = useState<WinnerInfo | null>(null);
   const [checkingWinners, setCheckingWinners] = useState(false);
-  const [fallbackData, setFallbackData] = useState<any>(null);
+  const [fallbackData, setFallbackData] = useState<FallbackData | null>(null);
   const [popupShownThisSession, setPopupShownThisSession] = useState(false);
   const timeoutRef = useRef<NodeJS.Timeout | null>(null);
   const fallbackTriggered = useRef(false);
@@ -182,9 +190,14 @@ export function useWinnerCheck() {
     try {
       const fallbackResult = await manualContractTest(publicClient, address);
       if (fallbackResult) {
-        setFallbackData(fallbackResult);
+        setFallbackData({
+          grandPrizeDistributed: fallbackResult.grandPrizeDistributed as boolean,
+          runnerUpsDistributed: fallbackResult.runnerUpsDistributed as boolean,
+          earlyBirdsDistributed: fallbackResult.earlyBirdsDistributed as boolean,
+          finalPool: fallbackResult.finalPool as bigint,
+        });
       }
-    } catch (error) {
+    } catch (_error) {
       // Silently handle fallback errors
     }
   }, [publicClient, address]);
@@ -207,7 +220,7 @@ export function useWinnerCheck() {
   }, [address, publicClient, grandPrizeDistributed, runnerUpsDistributed, earlyBirdsDistributed, tryFallbackRead]);
 
   // Manual refresh function
-  const manualRefresh = useCallback(async () => {
+  const _manualRefresh = useCallback(async () => {
     fallbackTriggered.current = false;
     setFallbackData(null);
     cacheRef.current = { runnerUps: null, earlyBirds: null, lastFetch: 0 }; // Clear cache
@@ -257,7 +270,7 @@ export function useWinnerCheck() {
       cacheRef.current.lastFetch = now;
       
       return runnerUps;
-    } catch (error) {
+    } catch (_error) {
       return cacheRef.current.runnerUps || [];
     }
   }, [publicClient]);
@@ -303,7 +316,7 @@ export function useWinnerCheck() {
       }
       
       return earlyBirds;
-    } catch (error) {
+    } catch (_error) {
       return cacheRef.current.earlyBirds || [];
     }
   }, [publicClient]);
@@ -371,7 +384,7 @@ export function useWinnerCheck() {
               highestPrizeCategory = 'runnerUp';
             }
           }
-        } catch (error) {
+        } catch (_error) {
           // Silently handle errors
         }
       }
@@ -396,7 +409,7 @@ export function useWinnerCheck() {
               highestPrizeCategory = 'earlyBird';
             }
           }
-        } catch (error) {
+        } catch (_error) {
           // Silently handle errors
         }
       }
@@ -422,7 +435,7 @@ export function useWinnerCheck() {
         setWinnerInfo(null);
         setShowPopup(false);
       }
-    } catch (error) {
+    } catch (_error) {
       // Silently handle errors
       setWinnerInfo(null);
       setShowPopup(false);

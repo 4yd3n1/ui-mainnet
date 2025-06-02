@@ -34,7 +34,7 @@ export default function WinnerPopup({ isOpen, onClose, category, amount, details
       const originalError = console.error;
       const originalWarn = console.warn;
       
-      const suppressConfettiErrors = (method: any) => (...args: any[]) => {
+      const suppressConfettiErrors = (method: (...args: unknown[]) => void) => (...args: unknown[]) => {
         const message = args[0]?.toString() || '';
         if (message.includes('worker') || message.includes('Worker') || message.includes('CSP') || message.includes('confetti')) {
           return; // Suppress confetti-related errors
