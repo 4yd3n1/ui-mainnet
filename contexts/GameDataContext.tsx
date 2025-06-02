@@ -38,6 +38,8 @@ interface GameData {
   marketCapTarget?: bigint;
   qualifyThreshold?: bigint;
   ticketsPerEth?: bigint;
+  initialTokens?: bigint;
+  seedEth?: bigint;
   
   // VRF status
   randomWordRequested?: boolean;
@@ -199,6 +201,18 @@ export function GameDataProvider({ children }: { children: React.ReactNode }) {
         abi: MEGA_ABI,
         functionName: 'TICKETS_PER_ETH',
       },
+      // Get initial tokens from contract
+      {
+        address: MEGA_CONTRACT_ADDRESS as `0x${string}`,
+        abi: MEGA_ABI,
+        functionName: 'INITIAL_TOKENS',
+      },
+      // Get seed ETH from contract
+      {
+        address: MEGA_CONTRACT_ADDRESS as `0x${string}`,
+        abi: MEGA_ABI,
+        functionName: 'SEED_ETH',
+      },
       // VRF status
       {
         address: MEGA_CONTRACT_ADDRESS as `0x${string}`,
@@ -310,6 +324,8 @@ export function GameDataProvider({ children }: { children: React.ReactNode }) {
       marketCapTarget,
       qualifyThreshold,
       ticketsPerEth,
+      initialTokens,
+      seedEth,
       randomWordRequested,
       randomWordReceived,
       ...userData
@@ -377,6 +393,8 @@ export function GameDataProvider({ children }: { children: React.ReactNode }) {
       marketCapTarget: marketCapTarget?.result as bigint | undefined,
       qualifyThreshold: qualifyThreshold?.result as bigint | undefined,
       ticketsPerEth: ticketsPerEth?.result as bigint | undefined,
+      initialTokens: initialTokens?.result as bigint | undefined,
+      seedEth: seedEth?.result as bigint | undefined,
       
       // VRF status
       randomWordRequested: randomWordRequested?.result as boolean | undefined,
