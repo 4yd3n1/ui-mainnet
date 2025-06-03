@@ -1,36 +1,41 @@
 'use client';
 
 import { useChainId, useAccount } from 'wagmi';
-import { sepolia } from 'wagmi/chains';
+import { mainnet, sepolia } from 'wagmi/chains';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
-export function useIsOnSepolia() {
+// Determine which network we're using based on environment
+const isMainnet = process.env.NEXT_PUBLIC_NETWORK === 'mainnet';
+const TARGET_CHAIN_ID = isMainnet ? mainnet.id : sepolia.id;
+
+export function useIsOnMainnet() {
   const chainId = useChainId();
   const { isConnected } = useAccount();
   
-  const isOnSepolia = isConnected && chainId === sepolia.id;
+  // Allow access to the target network (mainnet in production, sepolia in development)
+  const isOnTargetNetwork = isConnected && chainId === TARGET_CHAIN_ID;
   
-  return isOnSepolia;
+  return isOnTargetNetwork;
 }
 
-export function useSepoliaRedirect() {
-  const isOnSepolia = useIsOnSepolia();
+export function useMainnetRedirect() {
+  const isOnTargetNetwork = useIsOnMainnet();
   const router = useRouter();
 
   useEffect(() => {
-    if (!isOnSepolia) {
+    if (!isOnTargetNetwork) {
       router.push('/');
     }
-  }, [isOnSepolia, router]);
+  }, [isOnTargetNetwork, router]);
 
-  return isOnSepolia;
+  return isOnTargetNetwork;
 }
 
 export default function NetworkCheck({ children }: { children: React.ReactNode }) {
-  const isOnSepolia = useIsOnSepolia();
+  const isOnTargetNetwork = useIsOnMainnet();
   
-  if (!isOnSepolia) {
+  if (!isOnTargetNetwork) {
     return null;
   }
   

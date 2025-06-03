@@ -2,7 +2,7 @@
 import React from 'react';
 import dynamic from 'next/dynamic';
 import WinnerPopupClient from '../components/WinnerPopupClient';
-import { useSepoliaRedirect } from '@/components/common/NetworkCheck';
+import { useMainnetRedirect } from '@/components/common/NetworkCheck';
 
 const DashboardContent = dynamic(
   () => import('./DashboardContent'),
@@ -17,10 +17,10 @@ const DashboardContent = dynamic(
 );
 
 export default function DashboardPage() {
-  const isOnSepolia = useSepoliaRedirect();
+  const isOnMainnet = useMainnetRedirect();
 
   // Show loading while checking network or redirecting
-  if (!isOnSepolia) {
+  if (!isOnMainnet) {
     return (
       <main className="min-h-screen flex items-center justify-center bg-bg-main text-white">
         <p>Checking network...</p>

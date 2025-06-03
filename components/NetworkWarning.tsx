@@ -1,11 +1,11 @@
 'use client';
 
 import { useChainId } from 'wagmi';
-import { sepolia } from 'wagmi/chains';
+import { mainnet } from 'wagmi/chains';
 
 export default function NetworkWarning() {
   const chainId = useChainId();
-  const isWrongNetwork = chainId !== sepolia.id;
+  const isWrongNetwork = chainId !== mainnet.id;
 
   if (!isWrongNetwork) {
     return null;
@@ -16,7 +16,7 @@ export default function NetworkWarning() {
       <div className="flex items-center justify-center space-x-2">
         <span className="text-yellow-300">⚠️</span>
         <span className="font-semibold">
-          Wrong Network: Please switch to Sepolia testnet to use this app
+          Wrong Network: Please switch to Ethereum Mainnet to use this app
         </span>
         <span className="text-yellow-300">⚠️</span>
       </div>
