@@ -24,7 +24,12 @@ export function Providers({ children }: { children: React.ReactNode }) {
   return (
     <WagmiProvider config={config}>
       <QueryClientProvider client={queryClient}>
-        <RainbowKitProvider theme={darkTheme()}>
+        <RainbowKitProvider 
+          theme={darkTheme()}
+          modalSize="compact"
+          initialChain={config.chains[0]}
+          showRecentTransactions={true}
+        >
           <GameDataProvider>
             {children}
           </GameDataProvider>

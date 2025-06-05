@@ -8,6 +8,7 @@ import {
   coinbaseWallet,
   injectedWallet,
   rainbowWallet,
+  walletConnectWallet,
 } from '@rainbow-me/rainbowkit/wallets';
 import { MEGA_ABI, MEGA_CONTRACT_ADDRESS } from '../contracts/mega';
 
@@ -46,8 +47,9 @@ export const config = createConfig({
         wallets: [
           metaMaskWallet,
           coinbaseWallet,
-          injectedWallet,
+          walletConnectWallet,
           rainbowWallet,
+          injectedWallet,
         ],
       },
     ],
@@ -55,8 +57,8 @@ export const config = createConfig({
       appName: 'Make Ethereum Great Again',
       projectId: PROJECT_ID,
       appDescription: 'Join the ultimate on-chain rally! Connect your wallet to participate in the race to $15K market cap.',
-      appUrl: typeof window !== 'undefined' ? window.location.origin : 'http://localhost:3001',
-      appIcon: typeof window !== 'undefined' ? `${window.location.origin}/favicon-32x32.png` : 'http://localhost:3001/favicon-32x32.png',
+      appUrl: typeof window !== 'undefined' ? window.location.origin : 'https://megaa.dev',
+      appIcon: typeof window !== 'undefined' ? `${window.location.origin}/favicon-32x32.png` : 'https://megaa.dev/favicon-32x32.png',
     }
   ),
 });
