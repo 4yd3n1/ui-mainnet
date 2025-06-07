@@ -51,7 +51,7 @@ export default function UserStatsCard() {
   };
 
   return (
-    <DashboardCard>``
+    <DashboardCard>
       <h3 className="text-lg md:text-lg font-bold flex items-center gap-2 neon-text-yellow mb-2">
         <img src="/playerstats.png" alt="Personal Stats" className="w-8 h-8 md:w-8 md:h-8 lg:w-10 lg:h-10 flex-shrink-0" /> 
         <span>Your Stats</span>
