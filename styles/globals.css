@@ -56,7 +56,7 @@
   }
   
   .neon-text-yellow {
-    text-shadow: 0 0 2px #ffe066, 0 0 4px #ffe066, 0 0 8px #ffe066;
+    text-shadow: 0 0 8px #ffe066;
   }
   
   .neon-text-orange {
@@ -79,7 +79,7 @@
   }
   
   .neon-text-yellow {
-    text-shadow: 0 0 4px #ffe066, 0 0 8px #ffe066, 0 0 16px #ffe066;
+    text-shadow: 0 0 16px #ffe066;
   }
   
   .neon-text-orange {

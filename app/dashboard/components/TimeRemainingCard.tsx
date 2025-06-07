@@ -126,7 +126,7 @@ export default function TimeRemainingCard() {
       </h3>
       
       {/* Timer */}
-      <div className="text-4xl font-bold text-yellow-400">
+      <div className="text-4xl font-bold neon-text-yellow">
         {formatTime(timeRemaining)}
       </div>
       

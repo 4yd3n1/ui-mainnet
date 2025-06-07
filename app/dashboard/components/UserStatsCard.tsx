@@ -97,7 +97,7 @@ export default function UserStatsCard() {
           {/* Your Lottery Tickets */}
           <div className="bg-bg-card-alt rounded-lg p-4 md:p-3 lg:p-4 flex flex-col gap-2 md:gap-2 min-h-0 overflow-hidden">
             <span className="text-sm md:text-sm font-bold text-white mb-1 truncate">Your Lottery Tickets</span>
-            <span className="font-bold text-yellow-400 text-sm md:text-base break-words">
+            <span className="font-bold neon-text-yellow text-sm md:text-base break-words">
               {isLoading ? <LoadingSpinner /> : tickets}
             </span>
           </div>
@@ -114,7 +114,7 @@ export default function UserStatsCard() {
           {/* Selling Freeze Cooldown */}
           <div className="bg-bg-card-alt rounded-lg p-4 md:p-3 lg:p-4 flex flex-col gap-2 md:gap-2 min-h-0 overflow-hidden">
             <span className="text-sm md:text-sm font-bold text-white mb-1 truncate">Selling Freeze Cooldown</span>
-            <span className={`font-bold text-sm md:text-sm break-words ${!qualified ? 'text-gray-400' : (canFreeze ? 'text-green-400' : 'text-yellow-400')}`}>
+            <span className={`font-bold text-sm md:text-sm break-words ${!qualified ? 'text-gray-400' : (canFreeze ? 'text-green-400' : 'neon-text-yellow')}`}>
               {!qualified ? 'Must be qualified to freeze' : 
                 (canFreeze ? 'Ready To Freeze' : formatCooldown(freezeCooldownRemaining))}
             </span>

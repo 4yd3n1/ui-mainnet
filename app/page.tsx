@@ -23,7 +23,7 @@ export default function HomePage() {
         >
           {/* Mobile Header - visible only on mobile */}
           <div className="flex md:hidden justify-between items-center p-4 border-b border-gray-800/50">
-            <h2 className="text-lg font-bold text-yellow-400">MEGA</h2>
+            <h2 className="text-lg font-bold neon-text-yellow">MEGA</h2>
             <ConnectButton showBalance={false} accountStatus="avatar" chainStatus="icon" />
           </div>
 
@@ -69,7 +69,7 @@ export default function HomePage() {
                 <div className="bg-gradient-to-r from-yellow-500/20 to-yellow-600/20 border border-yellow-500/50 rounded-full px-6 py-3">
                   <div className="flex items-center justify-center space-x-2">
                     <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></div>
-                    <span className="text-yellow-400 font-semibold">Game Launching Soon</span>
+                    <span className="neon-text-yellow font-semibold">Game Launching Soon</span>
                     <div className="w-2 h-2 bg-yellow-400 rounded-full animate-pulse"></div>
                   </div>
                 </div>
