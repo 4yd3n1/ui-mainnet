@@ -344,7 +344,7 @@ export function GameDataProvider({ children }: { children: React.ReactNode }) {
     let marketCapDisplay = '$0';
     if (marketCapUSDNum > 0) {
       if (marketCapUSDNum < 1_000_000) {
-        marketCapDisplay = `$${marketCapUSDNum.toLocaleString(undefined, { maximumFractionDigits: 2 })}`;
+        marketCapDisplay = `$${marketCapUSDNum.toLocaleString(undefined, { maximumFractionDigits: 0 })}`;
       } else {
         marketCapDisplay = `$${(marketCapUSDNum / 1_000_000).toLocaleString(undefined, { maximumFractionDigits: 2 })}M`;
       }

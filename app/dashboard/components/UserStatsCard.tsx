@@ -51,10 +51,10 @@ export default function UserStatsCard() {
   };
 
   return (
-    <DashboardCard>
+    <DashboardCard>``
       <h3 className="text-lg md:text-lg font-bold flex items-center gap-2 neon-text-yellow mb-2">
         <img src="/playerstats.png" alt="Personal Stats" className="w-8 h-8 md:w-8 md:h-8 lg:w-10 lg:h-10 flex-shrink-0" /> 
-        <span className="truncate">Your Stats</span>
+        <span>Your Stats</span>
       </h3>
 
       {!address ? (
@@ -75,13 +75,13 @@ export default function UserStatsCard() {
           <div className="bg-bg-card-alt rounded-lg p-4 md:p-3 lg:p-4 flex flex-col gap-2 md:gap-2 min-h-0 overflow-hidden">
             <span className="text-sm md:text-sm font-bold text-white mb-1 truncate">Your Participation</span>
             <div className="flex justify-between items-center gap-2 min-w-0">
-              <span className="text-gray-light text-xs md:text-xs truncate flex-shrink-0">Total Contributed:</span>
+              <span className="text-gray-light text-xs md:text-xs truncate flex-shrink-0">Contributed:</span>
               <span className="font-bold text-white text-xs md:text-xs text-right break-words">
                 {isLoading ? <LoadingSpinner /> : `${contributionsEth.toFixed(2)} ETH`}
               </span>
             </div>
             <div className="flex justify-between items-center gap-2 min-w-0">
-              <span className="text-gray-light text-xs md:text-xs truncate flex-shrink-0">Lottery Tickets:</span>
+              <span className="text-gray-light text-xs md:text-xs truncate flex-shrink-0">Tickets:</span>
               <span className="font-bold text-white text-xs md:text-xs text-right">
                 {isLoading ? <LoadingSpinner /> : tickets}
               </span>
@@ -107,15 +107,15 @@ export default function UserStatsCard() {
             <span className="text-sm md:text-sm font-bold text-white mb-1 truncate">Qualification Status</span>
             <span className={`font-bold text-sm md:text-sm break-words ${qualified ? 'neon-text-yellow' : 'text-gray-400'}`}>
               {isLoading ? <LoadingSpinner /> : 
-                (qualified ? "You're in the lottery!" : 'Contribute 0.1+ ETH to qualify')}
+                (qualified ? "You're in the lottery!" : 'Contribute 0.1+ ETH')}
             </span>
           </div>
 
           {/* Selling Freeze Cooldown */}
           <div className="bg-bg-card-alt rounded-lg p-4 md:p-3 lg:p-4 flex flex-col gap-2 md:gap-2 min-h-0 overflow-hidden">
-            <span className="text-sm md:text-sm font-bold text-white mb-1 truncate">Selling Freeze Cooldown</span>
+            <span className="text-sm md:text-sm font-bold text-white mb-1 truncate">Selling Freeze</span>
             <span className={`font-bold text-sm md:text-sm break-words ${!qualified ? 'text-gray-400' : (canFreeze ? 'text-green-400' : 'neon-text-yellow')}`}>
-              {!qualified ? 'Must be qualified to freeze' : 
+              {!qualified ? 'Must be qualified' : 
                 (canFreeze ? 'Ready To Freeze' : formatCooldown(freezeCooldownRemaining))}
             </span>
           </div>

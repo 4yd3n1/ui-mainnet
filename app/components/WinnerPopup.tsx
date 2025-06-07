@@ -171,26 +171,26 @@ export default function WinnerPopup({ isOpen, onClose, category, amount, details
               {details.isGrandWinner && (
                 <div className="flex justify-between">
                   <span>🏆 Grand Prize:</span>
-                  <span className="text-yellow-400">{formatEther(details.grandPrizeAmount)} ETH</span>
+                  <span className="text-yellow-400">{Number(formatEther(details.grandPrizeAmount)).toFixed(4)} ETH</span>
                 </div>
               )}
               {details.isRunnerUp && (
                 <div className="flex justify-between">
                   <span>🥈 Runner-up:</span>
-                  <span className="text-blue-400">{formatEther(details.runnerUpAmount)} ETH</span>
+                  <span className="text-blue-400">{Number(formatEther(details.runnerUpAmount)).toFixed(4)} ETH</span>
                 </div>
               )}
               {details.isEarlyBird && (
                 <div className="flex justify-between">
                   <span>🐦 Early Bird:</span>
-                  <span className="text-green-400">{formatEther(details.earlyBirdAmount)} ETH</span>
+                  <span className="text-green-400">{Number(formatEther(details.earlyBirdAmount)).toFixed(4)} ETH</span>
                 </div>
               )}
               {(details.isGrandWinner ? 1 : 0) + (details.isRunnerUp ? 1 : 0) + (details.isEarlyBird ? 1 : 0) > 1 && (
                 <div className="border-t border-gray-600 pt-2 mt-2">
                   <div className="flex justify-between font-bold">
                     <span>Total:</span>
-                    <span className="text-[#FFD600]">{formatEther(details.totalWinnings)} ETH</span>
+                    <span className="text-[#FFD600]">{Number(formatEther(details.totalWinnings)).toFixed(4)} ETH</span>
                   </div>
                 </div>
               )}
@@ -198,7 +198,7 @@ export default function WinnerPopup({ isOpen, onClose, category, amount, details
           )}
           
           <div className="break-words truncate whitespace-normal text-xl sm:text-2xl md:text-3xl text-white my-6">
-            {formatEther(amount)} ETH
+            {Number(formatEther(amount)).toFixed(4)} ETH
           </div>
           
           <p className="text-sm text-gray-400">

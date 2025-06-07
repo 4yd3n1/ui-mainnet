@@ -39,7 +39,7 @@ export default function GameStatsCard() {
     <DashboardCard>
       <h3 className="text-lg md:text-lg font-bold flex items-center gap-2 neon-text-yellow mb-2">
         <img src="/gamestats.png" alt="Game Stats" className="w-8 h-8 md:w-10 md:h-10" /> 
-        <span className="truncate">Game Stats</span>
+        <span>Game Stats</span>
       </h3>
       <div className="space-y-3 md:space-y-3 flex-1 overflow-hidden">
         <div className="bg-bg-card-alt rounded-lg p-4 md:p-4 flex flex-col gap-2 md:gap-2">
@@ -51,21 +51,23 @@ export default function GameStatsCard() {
         </div>
         <div className="bg-bg-card-alt rounded-lg p-4 md:p-4 flex flex-col gap-2 md:gap-2">
           <span className="text-sm md:text-sm font-bold text-white mb-2 truncate">Liquidity Pool</span>
-          <div className="flex justify-between items-center gap-2 min-w-0">
-            <span className="text-gray-light text-xs md:text-xs truncate flex-shrink-0">ETH Reserve:</span>
-            <span className="font-bold text-white text-xs md:text-xs text-right break-words">
-              {isLoading ? <LoadingSpinner /> : 
-                (ethReserve ? (Number(ethReserve) / 1e18).toLocaleString(undefined, { maximumFractionDigits: 4 }) : 0)} ETH
-            </span>
+          <div className="grid grid-cols-2 gap-4">
+            <div className="flex flex-col items-center">
+              <span className="text-gray-light text-xs md:text-xs mb-1">ETH:</span>
+              <span className="font-bold text-white text-xs md:text-xs text-center break-words">
+                {isLoading ? <LoadingSpinner /> : 
+                  (ethReserve ? (Number(ethReserve) / 1e18).toLocaleString(undefined, { maximumFractionDigits: 2 }) : 0)}
+              </span>
+            </div>
+            <div className="flex flex-col items-center">
+              <span className="text-gray-light text-xs md:text-xs mb-1">MEGA:</span>
+              <span className="font-bold text-white text-xs md:text-xs text-center break-words">
+                {isLoading ? <LoadingSpinner /> : 
+                  (tokenReserve ? (Number(tokenReserve) / 1e18).toLocaleString(undefined, { maximumFractionDigits: 0 }) : 0)}
+              </span>
+            </div>
           </div>
-          <div className="flex justify-between items-center gap-2 min-w-0">
-            <span className="text-gray-light text-xs md:text-xs truncate flex-shrink-0">Token Reserve:</span>
-            <span className="font-bold text-white text-xs md:text-xs text-right break-words">
-              {isLoading ? <LoadingSpinner /> : 
-                (tokenReserve ? (Number(tokenReserve) / 1e18).toLocaleString(undefined, { maximumFractionDigits: 2 }) : 0)} MEGA
-            </span>
-          </div>
-          <div className="flex justify-between items-center gap-2 min-w-0">
+          <div className="flex justify-between items-center gap-2 min-w-0 mt-2">
             <span className="text-gray-light text-xs md:text-xs truncate flex-shrink-0">Market Cap:</span>
             <span className="font-bold neon-text-yellow text-xs md:text-xs text-right break-words">
               {isLoading ? <LoadingSpinner /> : marketCapDisplay || '$0'}

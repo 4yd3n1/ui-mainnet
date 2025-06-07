@@ -471,7 +471,7 @@ export default function ActionsPanel() {
         <div className={`bg-bg-card-alt rounded-lg p-4 md:p-4 flex flex-col gap-2 md:gap-2 ${gameEnded ? 'opacity-50' : ''}`}>
           <span className="text-sm md:text-sm font-bold text-white mb-2">Estimates</span>
           <div className="flex justify-between items-center">
-            <span className="text-gray-light text-xs md:text-xs">Est. tickets:</span>
+            <span className="text-gray-light text-xs md:text-xs">Tickets:</span>
             <span className="font-mono text-white text-xs md:text-xs">
               {tab === 'buy' && ethAmount && !isNaN(Number(ethAmount)) ? Math.floor(Number(ethAmount) * 10) : '0'}
             </span>
