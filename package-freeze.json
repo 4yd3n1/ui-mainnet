@@ -1,0 +1,27 @@
+{
+  "name": "mega-freeze-automation",
+  "version": "1.0.0",
+  "description": "Automated freeze function caller for MEGA contract",
+  "main": "freeze-automation.js",
+  "scripts": {
+    "start": "node freeze-automation.js",
+    "pm2-start": "pm2 start freeze-automation.js --name mega-freeze-bot",
+    "pm2-stop": "pm2 stop mega-freeze-bot",
+    "pm2-restart": "pm2 restart mega-freeze-bot",
+    "pm2-logs": "pm2 logs mega-freeze-bot"
+  },
+  "dependencies": {
+    "ethers": "^5.7.2",
+    "fs": "^0.0.1-security",
+    "path": "^0.12.7"
+  },
+  "keywords": [
+    "blockchain",
+    "ethereum",
+    "automation",
+    "freeze",
+    "mega"
+  ],
+  "author": "MEGA Game",
+  "license": "MIT"
+} 

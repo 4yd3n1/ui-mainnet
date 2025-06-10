@@ -1,0 +1,149 @@
+===============================================
+MEGA FREEZE AUTOMATION SCRIPT - COMPLETE GUIDE
+===============================================
+
+🎯 WHAT THIS SCRIPT DOES:
+- Automatically calls the freeze() function on your MEGA contract
+- Uses 30 different wallet addresses in rotation
+- Runs every 60 minutes exactly
+- Starts only when YOU manually trigger it
+- Runs continuously until stopped
+
+🔧 SETUP INSTRUCTIONS:
+
+1. CONFIGURE YOUR 30 WALLETS:
+   Edit freeze-automation.js and replace the WALLETS array:
+   
+   WALLETS: [
+       { address: '0x1234567890123456789012345678901234567890', privateKey: '0xabcdef1234567890abcdef1234567890abcdef1234567890abcdef1234567890' },
+       { address: '0x2345678901234567890123456789012345678901', privateKey: '0xbcdefg2345678901bcdefg2345678901bcdefg2345678901bcdefg2345678901' },
+       // ... add all 30 wallets
+   ]
+
+2. SET YOUR RPC ENDPOINT:
+   Replace this line:
+   RPC_URL: 'https://sepolia.infura.io/v3/YOUR_INFURA_KEY',
+   
+   With your actual Infura/Alchemy URL:
+   RPC_URL: 'https://sepolia.infura.io/v3/your-actual-key-here',
+
+3. UPLOAD TO YOUR SERVER:
+   scp freeze-automation.js root@80.78.30.115:/var/www/mega-ui/
+   scp FREEZE_AUTOMATION_GUIDE.txt root@80.78.30.115:/var/www/mega-ui/
+
+🚀 HOW TO RUN:
+
+STEP 1: SSH into your server
+ssh -i ~/.ssh/njal.la-key root@80.78.30.115
+cd /var/www/mega-ui
+
+STEP 2: Install dependencies (if needed)
+npm install ethers@5.7.2
+
+STEP 3: Start the bot
+pm2 start freeze-automation.js --name mega-freeze-bot
+
+STEP 4: Check it's running
+pm2 status
+pm2 logs mega-freeze-bot
+
+You should see:
+"⏳ Bot is ready and waiting for your manual trigger..."
+"📝 To start automation: echo "START" > trigger-freeze.txt"
+
+STEP 5: When you're ready to start the freeze automation
+echo "START" > trigger-freeze.txt
+
+🎯 WHAT HAPPENS NEXT:
+- First freeze executes immediately using wallet #1
+- Timer starts for exactly 60 minutes
+- Next freeze uses wallet #2
+- Continues every 60 minutes with wallets #3, #4, #5... #30
+- After wallet #30, cycles back to wallet #1
+
+📊 SAMPLE OUTPUT:
+🎯 Manual trigger detected!
+🚀 Starting freeze automation from manual trigger...
+🎯 [2025-01-15T14:30:00.000Z] Executing freeze...
+👤 Using wallet 1/30: 0x1234...
+💰 Wallet balance: 0.15 ETH
+🧊 Calling freeze function...
+📡 Transaction submitted: 0xabcd1234...
+✅ Freeze executed successfully!
+✅ Automation is now running every 60 minutes!
+⏰ Next execution at: 2025-01-15T15:30:00.000Z
+
+🛠️ USEFUL COMMANDS:
+
+View logs:
+pm2 logs mega-freeze-bot
+
+Stop the bot:
+pm2 stop mega-freeze-bot
+
+Restart the bot:
+pm2 restart mega-freeze-bot
+
+Check PM2 status:
+pm2 status
+
+Restart timing (trigger again):
+echo "START" > trigger-freeze.txt
+
+Run without PM2 (for testing):
+node freeze-automation.js
+
+⚠️ IMPORTANT NOTES:
+
+1. WALLET FUNDING: Make sure all 30 wallets have enough ETH for gas fees
+   Recommended: 0.01 ETH per wallet minimum
+
+2. TIMING: The 60-minute intervals start from when YOU trigger it
+   If you trigger at 2:30 PM, next freeze is at 3:30 PM, then 4:30 PM, etc.
+
+3. RESET: You can restart the timing by creating the trigger file again
+   This will reset the cycle and start immediately
+
+4. CONTRACT ADDRESS: The script automatically reads your current contract address
+   from mega-ui/contracts/mega.ts - no manual updates needed
+
+5. SAFETY: The script prevents multiple automations running at once
+
+6. PERSISTENCE: Using PM2 means it survives server restarts
+
+🔄 WALLET ROTATION CYCLE:
+Hour 1: Wallet #1 calls freeze()
+Hour 2: Wallet #2 calls freeze()
+Hour 3: Wallet #3 calls freeze()
+...
+Hour 30: Wallet #30 calls freeze()
+Hour 31: Wallet #1 calls freeze() (cycle repeats)
+
+🚨 TROUBLESHOOTING:
+
+Problem: "Could not find contract address"
+Solution: Make sure mega-ui/contracts/mega.ts exists and has MEGA_CONTRACT_ADDRESS
+
+Problem: "Please update CONFIG.RPC_URL"
+Solution: Replace YOUR_INFURA_KEY with your actual RPC endpoint
+
+Problem: Transaction fails
+Solution: Check wallet has enough ETH, check network connection
+
+Problem: Bot stops responding
+Solution: pm2 restart mega-freeze-bot
+
+Problem: Want to change timing
+Solution: Stop bot, edit INTERVAL_MINUTES in script, restart
+
+📝 QUICK START CHECKLIST:
+□ Configure 30 wallets in WALLETS array
+□ Set RPC_URL with your actual endpoint
+□ Upload script to server
+□ Start with: pm2 start freeze-automation.js --name mega-freeze-bot
+□ Trigger with: echo "START" > trigger-freeze.txt
+□ Monitor with: pm2 logs mega-freeze-bot
+
+===============================================
+END OF GUIDE
+=============================================== 
