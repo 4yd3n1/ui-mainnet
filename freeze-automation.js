@@ -4,10 +4,10 @@ const path = require('path');
 
 // ===== CONFIGURATION =====
 const CONFIG = {
-    // RPC endpoint for Sepolia
-    RPC_URL: 'https://sepolia.infura.io/v3/YOUR_INFURA_KEY', // Replace with your RPC
+    // RPC endpoint for Mainnet
+    RPC_URL: 'https://mainnet.infura.io/v3/YOUR_INFURA_KEY',
     
-    // Contract details (will be loaded from mega-ui/contracts/)
+    // Contract details (will be loaded from ui-mainnet/contracts/)
     CONTRACT_ADDRESS: '', // Will be loaded automatically
     
     // Timing

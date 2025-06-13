@@ -5,11 +5,9 @@ import { useGameData } from '@/contexts/GameDataContext';
 import { MEGA_CONTRACT_ADDRESS } from '@/contracts/mega';
 import MEGA_ABI from '@/contracts/MEGA_ABI.json';
 import LoadingSpinner from '@/components/common/LoadingSpinner';
-import { parseEther } from 'viem';
 
 export default function RefundContent() {
   const { address } = useAccount();
-  const [refundAmount, setRefundAmount] = useState('');
   const [currentTime, setCurrentTime] = useState(Math.floor(Date.now() / 1000));
 
   // Update current time every second
@@ -28,6 +26,8 @@ export default function RefundContent() {
     refundSupply,
     seedWithdrawn,
     userTokenBalance,
+    userContributions,
+    totalContributedSnapshot,
     owner,
     gameStartTime,
     gameDuration,
@@ -74,13 +74,11 @@ export default function RefundContent() {
   const { isLoading: isForceEndTxLoading } = useWaitForTransactionReceipt({ hash: forceEndTxHash });
 
   const handleClaimRefund = () => {
-    if (!refundAmount || parseFloat(refundAmount) <= 0) return;
-    
     claimRefund({
       address: MEGA_CONTRACT_ADDRESS as `0x${string}`,
       abi: MEGA_ABI,
       functionName: 'claimRefund',
-      args: [parseEther(refundAmount)],
+      args: [],
     });
   };
 
@@ -109,8 +107,8 @@ export default function RefundContent() {
   };
 
   // Calculate expected refund
-  const expectedRefund = refundAmount && refundPool && refundSupply && Number(refundSupply) > 0
-    ? (parseFloat(refundAmount) * Number(refundPool) / Number(refundSupply)) / 1e18
+  const expectedRefund = userContributions && refundPool && totalContributedSnapshot && userContributions > 0n && totalContributedSnapshot > 0n
+    ? (Number(userContributions) * Number(refundPool) / Number(totalContributedSnapshot)) / 1e18
     : 0;
 
   if (isLoading) {
@@ -225,30 +223,11 @@ export default function RefundContent() {
               <h2 className="text-xl font-bold mb-4">Claim Your Refund</h2>
               <div className="space-y-4">
                 <div>
-                  <p className="text-gray-light mb-2">Your MEGA Balance:</p>
-                  <p className="text-2xl font-bold">{userBalance.toFixed(4)} MEGA</p>
+                  <p className="text-gray-light mb-2">Your ETH Contribution:</p>
+                  <p className="text-2xl font-bold">{userContributions ? (Number(userContributions) / 1e18).toFixed(4) : '0'} ETH</p>
                 </div>
                 
-                <div>
-                  <label className="block text-sm font-medium mb-2">Amount to refund:</label>
-                  <input
-                    type="number"
-                    step="0.0001"
-                    value={refundAmount}
-                    onChange={(e) => setRefundAmount(e.target.value)}
-                    max={userBalance}
-                    className="w-full px-4 py-2 bg-bg-card-alt rounded-lg text-white focus:outline-none focus:ring-2 focus:ring-yellow-400"
-                    placeholder="Enter MEGA amount"
-                  />
-                  <button
-                    onClick={() => setRefundAmount(userBalance.toString())}
-                    className="text-sm text-yellow-400 hover:underline mt-1"
-                  >
-                    Max: {userBalance.toFixed(4)} MEGA
-                  </button>
-                </div>
-
-                {refundAmount && parseFloat(refundAmount) > 0 && (
+                {userContributions && userContributions > 0n && (
                   <div className="bg-bg-card-alt rounded-lg p-4">
                     <p className="text-sm text-gray-light">Expected refund:</p>
                     <p className="text-xl font-bold text-yellow-400">
@@ -259,11 +238,17 @@ export default function RefundContent() {
 
                 <button
                   onClick={handleClaimRefund}
-                  disabled={!refundAmount || parseFloat(refundAmount) <= 0 || parseFloat(refundAmount) > userBalance || isRefundPending || isRefundTxLoading}
+                  disabled={!userContributions || userContributions === 0n || isRefundPending || isRefundTxLoading}
                   className="w-full px-6 py-3 bg-yellow-500 hover:bg-yellow-600 disabled:bg-gray-600 text-black font-bold rounded-lg transition-colors"
                 >
                   {isRefundPending || isRefundTxLoading ? <LoadingSpinner /> : 'Claim Refund'}
                 </button>
+                
+                {(!userContributions || userContributions === 0n) && (
+                  <p className="text-sm text-gray-light text-center mt-2">
+                    You didn't contribute any ETH to this game
+                  </p>
+                )}
               </div>
             </div>
           )}
@@ -282,8 +267,8 @@ export default function RefundContent() {
         <ul className="list-disc list-inside text-gray-light space-y-1">
           <li>Refunds are only available if the game ends and distributions fail</li>
           <li>Anyone can enable refunds {Math.floor(GAME_DURATION / 60)} minutes after game end</li>
-          <li>You receive a proportional share of the refund pool based on your token holdings</li>
-          <li>Burning tokens for refunds is irreversible</li>
+          <li>You receive a proportional share of the refund pool based on your ETH contributions</li>
+          <li>Claiming refunds will burn your tokens and is irreversible</li>
         </ul>
       </div>
     </div>

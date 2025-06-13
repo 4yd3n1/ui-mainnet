@@ -110,7 +110,7 @@ export default function ActionsPanel() {
   } = useSimulateContract({
     address: CONTRACT_ADDRESS,
     abi: MEGA_ABI,
-    functionName: 'freezeSelling',
+    functionName: 'freeze',
     value: parseEther('0.1'),
     query: { enabled: !isFrozen && !gameEnded },
   });

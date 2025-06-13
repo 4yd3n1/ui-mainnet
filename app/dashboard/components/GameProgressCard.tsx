@@ -11,7 +11,7 @@ export default function GameProgressCard() {
   // Format the target display
   const targetDisplay = marketCapTarget ? 
     `$${(Number(marketCapTarget) / 1e18).toLocaleString(undefined, { maximumFractionDigits: 0 })}` : 
-    '$100,000'; // Fallback in case contract read fails
+    '$4,000,000'; // Fallback in case contract read fails
 
   return (
     // Reduced padding, gap, and removed min-h

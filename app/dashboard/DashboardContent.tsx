@@ -7,8 +7,27 @@ import UserStatsCard from './components/UserStatsCard';
 import ActionsPanel from './components/ActionsPanel';
 import AdminDistributionPanel from './components/AdminDistributionPanel';
 import { ConnectButton } from '@rainbow-me/rainbowkit';
+import VerificationScreen from '@/components/VerificationScreen';
+import { useGameData } from '@/contexts/GameDataContext';
+import { useState, useEffect } from 'react';
 
 export default function DashboardContent() {
+  const { gameStartTime, isLoading } = useGameData();
+  const [now, setNow] = useState(Math.floor(Date.now() / 1000));
+
+  useEffect(() => {
+    const interval = setInterval(() => setNow(Math.floor(Date.now() / 1000)), 1000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const start = gameStartTime ? Number(gameStartTime) : 0;
+  const prepRemaining = Math.max(0, start - now);
+
+  // Show verification/preparation screen if we're still in the pre-game window
+  if (!isLoading && prepRemaining > 0) {
+    return <VerificationScreen timeRemaining={prepRemaining} />;
+  }
+
   return (
     <div
       className="flex flex-col min-h-screen"

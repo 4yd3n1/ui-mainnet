@@ -47,11 +47,6 @@
   },
   {
     "inputs": [],
-    "name": "CapNotReached",
-    "type": "error"
-  },
-  {
-    "inputs": [],
     "name": "CooldownActive",
     "type": "error"
   },
@@ -108,6 +103,11 @@
   {
     "inputs": [],
     "name": "MaxEthPerAddress",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "NoContribution",
     "type": "error"
   },
   {
@@ -235,6 +235,11 @@
   {
     "inputs": [],
     "name": "TransferFailed",
+    "type": "error"
+  },
+  {
+    "inputs": [],
+    "name": "VerificationPeriodActive",
     "type": "error"
   },
   {
@@ -603,6 +608,19 @@
   },
   {
     "inputs": [],
+    "name": "FORCE_REFUND_DELAY",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "GAME_DURATION",
     "outputs": [
       {
@@ -720,6 +738,19 @@
   },
   {
     "inputs": [],
+    "name": "VERIFICATION_PERIOD",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "acceptOwnership",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -806,13 +837,7 @@
     "type": "function"
   },
   {
-    "inputs": [
-      {
-        "internalType": "uint256",
-        "name": "tokenAmount",
-        "type": "uint256"
-      }
-    ],
+    "inputs": [],
     "name": "claimRefund",
     "outputs": [],
     "stateMutability": "nonpayable",
@@ -977,6 +1002,13 @@
   },
   {
     "inputs": [],
+    "name": "freeze",
+    "outputs": [],
+    "stateMutability": "payable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "freezeEndTime",
     "outputs": [
       {
@@ -986,13 +1018,6 @@
       }
     ],
     "stateMutability": "view",
-    "type": "function"
-  },
-  {
-    "inputs": [],
-    "name": "freezeSelling",
-    "outputs": [],
-    "stateMutability": "payable",
     "type": "function"
   },
   {
@@ -1088,6 +1113,19 @@
   },
   {
     "inputs": [],
+    "name": "getTimeUntilGameStart",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
     "name": "grandPrizeDistributed",
     "outputs": [
       {
@@ -1170,6 +1208,19 @@
       }
     ],
     "name": "isQualified",
+    "outputs": [
+      {
+        "internalType": "bool",
+        "name": "",
+        "type": "bool"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "isVerificationPeriod",
     "outputs": [
       {
         "internalType": "bool",
@@ -1616,6 +1667,19 @@
     "type": "function"
   },
   {
+    "inputs": [],
+    "name": "totalContributedSnapshot",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
+    "type": "function"
+  },
+  {
     "inputs": [
       {
         "internalType": "address",
@@ -1724,6 +1788,19 @@
     "name": "transferOwnership",
     "outputs": [],
     "stateMutability": "nonpayable",
+    "type": "function"
+  },
+  {
+    "inputs": [],
+    "name": "verificationEndTime",
+    "outputs": [
+      {
+        "internalType": "uint256",
+        "name": "",
+        "type": "uint256"
+      }
+    ],
+    "stateMutability": "view",
     "type": "function"
   },
   {

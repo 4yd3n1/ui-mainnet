@@ -1,13 +1,13 @@
 'use client';
 
 import { useChainId, useAccount } from 'wagmi';
-import { mainnet, sepolia } from 'wagmi/chains';
+import { mainnet } from 'wagmi/chains';
 import { useRouter } from 'next/navigation';
 import { useEffect } from 'react';
 
 // Determine which network we're using based on environment
 const isMainnet = process.env.NEXT_PUBLIC_NETWORK === 'mainnet';
-const TARGET_CHAIN_ID = isMainnet ? mainnet.id : sepolia.id;
+const TARGET_CHAIN_ID = mainnet.id;
 
 export function useIsOnMainnet() {
   const chainId = useChainId();

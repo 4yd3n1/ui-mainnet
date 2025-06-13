@@ -31,6 +31,7 @@ interface GameData {
   refundPool?: bigint;
   refundSupply?: bigint;
   seedWithdrawn?: boolean;
+  totalContributedSnapshot?: bigint;
   
   // Contract metadata
   owner?: string;
@@ -171,6 +172,12 @@ export function GameDataProvider({ children }: { children: React.ReactNode }) {
         address: MEGA_CONTRACT_ADDRESS as `0x${string}`,
         abi: MEGA_ABI,
         functionName: 'seedWithdrawn',
+      },
+      // Get total contributed snapshot for refund calculations
+      {
+        address: MEGA_CONTRACT_ADDRESS as `0x${string}`,
+        abi: MEGA_ABI,
+        functionName: 'totalContributedSnapshot',
       },
       // Contract metadata
       {
@@ -319,6 +326,7 @@ export function GameDataProvider({ children }: { children: React.ReactNode }) {
       refundPool,
       refundSupply,
       seedWithdrawn,
+      totalContributedSnapshot,
       owner,
       gameDuration,
       marketCapTarget,
@@ -337,7 +345,7 @@ export function GameDataProvider({ children }: { children: React.ReactNode }) {
     
     // Calculate derived values
     const marketCapUSDNum = marketCapUSD?.result ? Number(marketCapUSD.result) / 1e18 : 0;
-    const marketCapTargetNum = marketCapTarget?.result ? Number(marketCapTarget.result) / 1e18 : 10000000; // Default to $10M if not available
+    const marketCapTargetNum = marketCapTarget?.result ? Number(marketCapTarget.result) / 1e18 : 4000000; // Default to $4M if not available
     const marketCapProgress = Math.min((marketCapUSDNum / marketCapTargetNum) * 100, 100);
     
     // Format market cap display
@@ -386,6 +394,7 @@ export function GameDataProvider({ children }: { children: React.ReactNode }) {
       refundPool: refundPool?.result as bigint | undefined,
       refundSupply: refundSupply?.result as bigint | undefined,
       seedWithdrawn: seedWithdrawn?.result as boolean | undefined,
+      totalContributedSnapshot: totalContributedSnapshot?.result as bigint | undefined,
       
       // Contract metadata
       owner: owner?.result as string | undefined,

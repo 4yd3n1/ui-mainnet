@@ -1,4 +1,4 @@
-const RandomWordRequester = require('../../hardhat-project/scripts/autoRequestRandomWord.js');
+const RandomWordRequester = require('../../hardhat-mainnet/scripts/autoRequestRandomWord.js');
 
 class RandomWordService {
     constructor() {
